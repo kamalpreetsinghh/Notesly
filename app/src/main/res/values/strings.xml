@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Notesly</string>
+    <string name="my_notes_label">My Notes</string>
+    <string name="searchbar_placeholder">Search Notes</string>
+    <string name="search_icon">Search</string>
+    <string name="create_note_button_description">Create a new note</string>
+    <string name="empty_notes_all">You have no notes!</string>
+    <string name="empty_notes">You have no %1$s notes!</string>
+    <string name="add_note_screen_title">Add Note</string>
+    <string name="edit_note_screen_title">Edit Note</string>
+    <string name="delete_note_dialog_title">Delete Note</string>
+    <string name="delete_note_dialog_text">This note will be deleted. This action cannot be undone.</string>
+    <string name="cancel_label">Cancel</string>
+    <string name="delete_note_label">Delete</string>
+    <string name="recover_note_label">Recover</string>
+    <string name="move_to_label">Move to %1$s</string>
+    <string name="trash_notes_message">Notes are available here for 30 days. After that time, these notes will be permanently deleted.</string>
+    <string name="delete_note_description">Delete note</string>
+    <string name="done_note_description">Save Note</string>
+    <string name="menu_note_description">Open Menu</string>
+    <string name="move_all_notes_trash_menu_label">Move all notes to trash</string>
+    <string name="delete_all_notes_menu_label">Delete all notes</string>
+    <string name="note_error_message">There is some problem in this note.</string>
+</resources>
