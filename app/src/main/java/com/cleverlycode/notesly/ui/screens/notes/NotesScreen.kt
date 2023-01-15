@@ -1,5 +1,7 @@
 package com.cleverlycode.notesly.ui.screens.notes
 
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -38,7 +40,6 @@ fun NotesScreen(
     viewModel: NotesViewModel = hiltViewModel()
 ) {
     val notesUiState by viewModel.notesUiState
-
     val focusManager = LocalFocusManager.current
 
     Box(
@@ -100,41 +101,25 @@ fun NotesScreen(
                     CircularProgressIndicator()
                 }
             } else {
-                if (notesUiState.notes.isNotEmpty() || notesUiState.search.isNotBlank()) {
-                    OutlinedTextField(
-                        value = notesUiState.search,
-                        onValueChange = { viewModel.onSearchTextChange(newValue = it) },
-                        modifier = Modifier.fillMaxWidth(),
-                        placeholder = { Text(text = stringResource(id = R.string.searchbar_placeholder)) },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Filled.Search,
-                                contentDescription = stringResource(
-                                    id = R.string.search_icon
-                                )
-                            )
-                        },
-                        shape = CircleShape,
-                        singleLine = true,
-                        colors = TextFieldDefaults.textFieldColors(
-                            containerColor = if (isSystemInDarkTheme()) SearchBarColorDark else SearchBarColorLight,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent
-                        )
+                SearchBar(
+                    search = notesUiState.search,
+                    isVisible = notesUiState.notes.isNotEmpty() || notesUiState.search.isNotEmpty(),
+                    onChange = { newValue -> viewModel.onSearchTextChange(newValue) })
+
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.spacer)))
+
+                AnimatedVisibility(
+                    visible = notesUiState.noteType == NoteType.TRASH.value &&
+                            (notesUiState.notes.isNotEmpty() || notesUiState.search.isNotEmpty())
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.trash_notes_message),
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Light
                     )
 
                     Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.spacer)))
-
-                    if (notesUiState.noteType == NoteType.TRASH.value && notesUiState.notes.isNotEmpty()) {
-                        Text(
-                            text = stringResource(id = R.string.trash_notes_message),
-                            color = MaterialTheme.colorScheme.onSurface,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Light
-                        )
-
-                        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.spacer)))
-                    }
                 }
 
                 if (notesUiState.notes.isEmpty()) {
@@ -144,15 +129,26 @@ fun NotesScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         val emptyNoteMsg =
-                            if (notesUiState.noteType == NoteType.ALL.value) stringResource(id = R.string.empty_notes_all)
-                            else stringResource(
-                                id = R.string.empty_notes,
-                                if (notesUiState.noteType == NoteType.TRASH.value) "Recently Deleted"
-                                else notesUiState.noteType
-                            )
+                            when (notesUiState.noteType) {
+                                NoteType.ALL.value -> stringResource(id = R.string.empty_notes_all)
+                                else -> stringResource(
+                                    id = R.string.empty_notes,
+                                    if (notesUiState.noteType == NoteType.TRASH.value) "Recently Deleted"
+                                    else notesUiState.noteType
+                                )
+                            }
                         Text(text = emptyNoteMsg)
                     }
-                } else {
+                }
+
+                AnimatedVisibility(
+                    visible = notesUiState.notes.isNotEmpty(),
+                    enter = slideInVertically(
+                        initialOffsetY = { it / 4 },
+                        animationSpec = tween()
+                    ) + fadeIn(),
+                    exit = slideOutVertically(animationSpec = tween()) + fadeOut()
+                ) {
                     NoteCards(
                         notes = notesUiState.notes,
                         listState = notesUiState.listState,
@@ -193,6 +189,39 @@ fun NotesScreen(
                 onDismiss = { viewModel.closeDialog() },
                 confirmButtonClick = { viewModel.emptyTrash() })
         }
+    }
+}
+
+@Composable
+fun SearchBar(
+    search: String,
+    isVisible: Boolean,
+    onChange: (String) -> Unit
+) {
+    AnimatedVisibility(
+        visible = isVisible,
+        enter = expandVertically() + fadeIn(),
+        exit = shrinkVertically() + fadeOut()
+    ) {
+        OutlinedTextField(
+            value = search,
+            onValueChange = { onChange(it) },
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = { Text(text = stringResource(id = R.string.searchbar_placeholder)) },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Filled.Search,
+                    contentDescription = stringResource(id = R.string.search_icon)
+                )
+            },
+            shape = CircleShape,
+            singleLine = true,
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = if (isSystemInDarkTheme()) SearchBarColorDark else SearchBarColorLight,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            )
+        )
     }
 }
 

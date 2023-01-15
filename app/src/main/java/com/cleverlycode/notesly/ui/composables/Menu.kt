@@ -56,7 +56,7 @@ fun Menu(
                 DropdownMenuItem(
                     text = {
                         Text(
-                            text = "Remove from Starred",
+                            text = stringResource(id = R.string.remove_from_starred_label),
                             style = MaterialTheme.typography.titleMedium
                         )
                     },
@@ -71,7 +71,7 @@ fun Menu(
                 DropdownMenuItem(
                     text = {
                         Text(
-                            text = "Move to Starred",
+                            text = stringResource(id = R.string.move_to_starred_label),
                             style = MaterialTheme.typography.titleMedium
                         )
                     },

@@ -21,4 +21,6 @@
     <string name="move_all_notes_trash_menu_label">Move all notes to trash</string>
     <string name="delete_all_notes_menu_label">Delete all notes</string>
     <string name="note_error_message">There is some problem in this note.</string>
+    <string name="move_to_starred_label">Move to starred</string>
+    <string name="remove_from_starred_label">Remove from starred</string>
 </resources>

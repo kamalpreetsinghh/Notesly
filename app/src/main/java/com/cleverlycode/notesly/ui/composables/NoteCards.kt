@@ -1,8 +1,6 @@
 package com.cleverlycode.notesly.ui.composables
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.LinearOutSlowInEasing
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -25,12 +23,7 @@ fun NoteCards(
                 note = note,
                 navigateToNoteDetail = navigateToNoteDetail,
                 onClick = onClick,
-                modifier = Modifier.animateItemPlacement(
-                    animationSpec = tween(
-                        durationMillis = 500,
-                        easing = LinearOutSlowInEasing,
-                    )
-                )
+                modifier = Modifier
             )
         }
     }
