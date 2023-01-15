@@ -7,6 +7,7 @@ import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.window.PopupProperties
 import com.cleverlycode.notesly.R
 import com.cleverlycode.notesly.ui.screens.notes.NoteType
 
@@ -24,7 +25,11 @@ fun Menu(
 ) {
     DropdownMenu(
         expanded = expanded,
-        onDismissRequest = { closeMenu() }
+        onDismissRequest = { closeMenu() },
+        properties = PopupProperties(
+            dismissOnBackPress = true,
+            dismissOnClickOutside = true
+        )
     ) {
         if (isRecentlyDeleted) {
             DropdownMenuItem(
@@ -114,7 +119,11 @@ fun NotesMenu(
 ) {
     DropdownMenu(
         expanded = expanded,
-        onDismissRequest = { onDismissRequest() }
+        onDismissRequest = { onDismissRequest() },
+        properties = PopupProperties(
+            dismissOnBackPress = true,
+            dismissOnClickOutside = true
+        )
     ) {
         if (noteType == NoteType.TRASH.value) {
             DropdownMenuItem(
