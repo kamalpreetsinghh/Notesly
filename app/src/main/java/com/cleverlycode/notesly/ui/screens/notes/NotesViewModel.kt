@@ -36,7 +36,8 @@ class NotesViewModel @Inject constructor(
                         allNotes = notes
                         val filteredNotes = getFilteredNotes(allNotes, noteType)
                         notesUiState.value = notesUiState.value.copy(
-                            notes = filteredNotes
+                            notes = filteredNotes,
+                            listState = LazyListState(firstVisibleItemIndex = 0)
                         )
                         deleteOldNotes(notes)
                     }

@@ -24,10 +24,16 @@ fun AlertDialog(
     AlertDialog(
         modifier = Modifier.width(dimensionResource(id = R.dimen.alert_width)),
         title = {
-            Text(text = title)
+            Text(
+                text = title,
+                style = MaterialTheme.typography.headlineLarge
+            )
         },
         text = {
-            Text(text = text)
+            Text(
+                text = text,
+                style = MaterialTheme.typography.titleMedium
+            )
         },
         onDismissRequest = { onDismiss() },
         confirmButton = {
@@ -36,7 +42,7 @@ fun AlertDialog(
             ) {
                 Text(
                     text = confirmButtonText,
-                    fontWeight = FontWeight.SemiBold
+                    style = MaterialTheme.typography.headlineLarge
                 )
             }
         },
@@ -46,7 +52,8 @@ fun AlertDialog(
             ) {
                 Text(
                     text = dismissButtonText,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.headlineLarge
                 )
             }
         }

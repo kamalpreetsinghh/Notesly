@@ -115,8 +115,8 @@ class NoteViewModel @Inject constructor(
     }
 
     fun onMoveToClick(moveTo: String, navigateToNotes: () -> Unit) {
-        moveNote(moveTo = moveTo)
         closeMenu()
+        moveNote(moveTo = moveTo)
 
         if (isNewNote()) {
             viewModelScope.launch {
@@ -147,6 +147,7 @@ class NoteViewModel @Inject constructor(
     }
 
     fun onRecoverClick(navigateToNotes: () -> Unit) {
+        closeMenu()
         val note = Note(
             id = noteId,
             title = title,
