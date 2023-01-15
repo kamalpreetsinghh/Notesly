@@ -26,7 +26,8 @@ import java.text.SimpleDateFormat
 fun NoteCard(
     note: Note,
     navigateToNoteDetail: (String, Long) -> Unit,
-    onClick: (Long, (String, Long) -> Unit) -> Unit
+    onClick: (Long, (String, Long) -> Unit) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val colors = mapOf(
         NoteType.ALL.value to RedCard,
@@ -36,7 +37,7 @@ fun NoteCard(
 
     Card(
         onClick = { onClick(note.id, navigateToNoteDetail) },
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),
         shape = RoundedCornerShape(dimensionResource(id = R.dimen.card_rounded_corner_note)),

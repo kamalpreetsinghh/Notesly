@@ -3,16 +3,21 @@ package com.cleverlycode.notesly
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import com.cleverlycode.notesly.ui.screens.notes.NotesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class NoteslyActivity() : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val viewModel: NotesViewModel by viewModels()
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        installSplashScreen()
+        installSplashScreen().setKeepOnScreenCondition(condition = {
+            viewModel.notesUiState.value.isLoading
+        })
         setContent {
             NoteslyApp()
         }
