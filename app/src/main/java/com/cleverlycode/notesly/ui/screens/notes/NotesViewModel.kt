@@ -1,12 +1,15 @@
 package com.cleverlycode.notesly.ui.screens.notes
 
-import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cleverlycode.notesly.domain.model.Note
 import com.cleverlycode.notesly.domain.repository.NotesRepository
+import com.cleverlycode.notesly.ui.screens.notedetail.Task
 import com.cleverlycode.notesly.util.Resource
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -20,6 +23,8 @@ class NotesViewModel @Inject constructor(
 ) : ViewModel() {
     val notesUiState = mutableStateOf(NotesUiState())
     private val noteType get() = notesUiState.value.noteType
+    private val isGridView get() = notesUiState.value.isGridView
+    private val isMenuExpanded get() = notesUiState.value.isMenuExpanded
     private var allNotes: List<Note> = emptyList()
 
     init {
@@ -37,7 +42,7 @@ class NotesViewModel @Inject constructor(
                         val filteredNotes = getFilteredNotes(allNotes, noteType)
                         notesUiState.value = notesUiState.value.copy(
                             notes = filteredNotes,
-                            listState = LazyListState(firstVisibleItemIndex = 0)
+                            listState = LazyGridState(firstVisibleItemIndex = 0)
                         )
                         deleteOldNotes(notes)
                     }
@@ -48,11 +53,16 @@ class NotesViewModel @Inject constructor(
 
     fun onClickNoteTypeChip(noteType: String) {
         val filteredNotes = getFilteredNotes(allNotes, noteType)
-        notesUiState.value = NotesUiState(
+        notesUiState.value = notesUiState.value.copy(
             notes = filteredNotes,
             noteType = noteType,
-            listState = LazyListState(firstVisibleItemIndex = 0)
+            listState = LazyGridState(firstVisibleItemIndex = 0)
         )
+    }
+
+    fun changeNotesLayout() {
+        notesUiState.value =
+            notesUiState.value.copy(isGridView = !isGridView, isMenuExpanded = false)
     }
 
     fun onCreateNoteButtonClick(navigateToNoteDetail: (String, Long) -> Unit) {

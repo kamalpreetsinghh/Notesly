@@ -102,17 +102,25 @@ fun NotesScreen(
                 )
 
                 Row {
-                    IconButton(onClick = { viewModel.openMenu() }) {
+                    IconButton(
+                        onClick = { viewModel.openMenu() },
+                        enabled = !notesUiState.isMenuExpanded
+                    ) {
                         Icon(
                             imageVector = Icons.Filled.MoreVert,
                             contentDescription = stringResource(id = R.string.menu_note_description)
                         )
                     }
-                    NotesMenu(expanded = notesUiState.isMenuExpanded,
+                    NotesMenu(
+                        expanded = notesUiState.isMenuExpanded,
                         noteType = notesUiState.noteType,
+                        isGridView = notesUiState.isGridView,
+                        isNotesEmpty = notesUiState.notes.isEmpty(),
                         onDismissRequest = { viewModel.closeMenu() },
                         moveToTrash = { viewModel.deleteNotes() },
-                        openDialog = { viewModel.openDialog() })
+                        openDialog = { viewModel.openDialog() },
+                        changeNotesLayout = { viewModel.changeNotesLayout() }
+                    )
                 }
             }
 
@@ -181,6 +189,7 @@ fun NotesScreen(
                     NoteCards(
                         notes = notesUiState.notes,
                         listState = notesUiState.listState,
+                        isGridView = notesUiState.isGridView,
                         navigateToNoteDetail = navigateToNoteDetail
                     ) { noteId, navigateToNoteDetail ->
                         viewModel.onClickNote(

@@ -6,6 +6,7 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.PopupProperties
 import com.cleverlycode.notesly.R
@@ -55,7 +56,8 @@ fun Menu(
                         Icons.Outlined.Refresh,
                         contentDescription = null
                     )
-                })
+                }
+            )
         } else {
             if (selectedNoteType == NoteType.STARRED.value) {
                 DropdownMenuItem(
@@ -71,7 +73,8 @@ fun Menu(
                             Icons.Filled.Star,
                             contentDescription = stringResource(id = R.string.delete_note_description)
                         )
-                    })
+                    }
+                )
             } else if (selectedNoteType == NoteType.ALL.value && selectedNoteChip != NoteType.TODO.value) {
                 DropdownMenuItem(
                     text = {
@@ -86,7 +89,8 @@ fun Menu(
                             Icons.Filled.Star,
                             contentDescription = stringResource(id = R.string.delete_note_description)
                         )
-                    })
+                    }
+                )
             }
 
             DropdownMenuItem(
@@ -104,7 +108,8 @@ fun Menu(
                         Icons.Filled.Delete,
                         contentDescription = stringResource(id = R.string.delete_note_description)
                     )
-                })
+                }
+            )
         }
     }
 }
@@ -113,9 +118,12 @@ fun Menu(
 fun NotesMenu(
     expanded: Boolean,
     noteType: String,
+    isGridView: Boolean,
+    isNotesEmpty: Boolean,
     onDismissRequest: () -> Unit,
     moveToTrash: () -> Unit,
-    openDialog: () -> Unit
+    openDialog: () -> Unit,
+    changeNotesLayout: () -> Unit
 ) {
     DropdownMenu(
         expanded = expanded,
@@ -125,36 +133,56 @@ fun NotesMenu(
             dismissOnClickOutside = true
         )
     ) {
-        if (noteType == NoteType.TRASH.value) {
-            DropdownMenuItem(
-                text = {
-                    Text(
-                        text = stringResource(id = R.string.delete_all_notes_menu_label),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                },
-                onClick = { openDialog() },
-                leadingIcon = {
-                    Icon(
-                        Icons.Filled.Delete,
-                        contentDescription = stringResource(id = R.string.delete_all_notes_menu_label)
-                    )
-                })
-        } else {
-            DropdownMenuItem(
-                text = {
-                    Text(
-                        text = stringResource(id = R.string.move_all_notes_trash_menu_label),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                },
-                onClick = { moveToTrash() },
-                leadingIcon = {
-                    Icon(
-                        Icons.Filled.Delete,
-                        contentDescription = stringResource(id = R.string.move_all_notes_trash_menu_label)
-                    )
-                })
+        DropdownMenuItem(
+            text = {
+                Text(
+                    text = if (isGridView) "List View" else "Grid View",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            },
+            onClick = { changeNotesLayout() },
+            leadingIcon = {
+                Icon(
+                    painter = painterResource(id = if(isGridView) R.drawable.ic_list else R.drawable.ic_grid),
+                    contentDescription = stringResource(id = R.string.delete_all_notes_menu_label)
+                )
+            }
+        )
+
+        if (!isNotesEmpty) {
+            if (noteType == NoteType.TRASH.value) {
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = stringResource(id = R.string.delete_all_notes_menu_label),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    },
+                    onClick = { openDialog() },
+                    leadingIcon = {
+                        Icon(
+                            Icons.Filled.Delete,
+                            contentDescription = stringResource(id = R.string.delete_all_notes_menu_label)
+                        )
+                    }
+                )
+            } else {
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = stringResource(id = R.string.move_all_notes_trash_menu_label),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    },
+                    onClick = { moveToTrash() },
+                    leadingIcon = {
+                        Icon(
+                            Icons.Filled.Delete,
+                            contentDescription = stringResource(id = R.string.move_all_notes_trash_menu_label)
+                        )
+                    }
+                )
+            }
         }
     }
 }

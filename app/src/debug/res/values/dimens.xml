@@ -3,6 +3,7 @@
     <dimen name="horizontal_margin">16dp</dimen>
     <dimen name="vertical_margin">8dp</dimen>
     <dimen name="vertical_margin_notes">16dp</dimen>
+    <dimen name="vertical_margin_notes_grid">24dp</dimen>
     <dimen name="vertical_margin_large">32dp</dimen>
     <dimen name="spacer">16dp</dimen>
     <dimen name="padding_small">4dp</dimen>
