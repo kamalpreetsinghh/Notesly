@@ -4,10 +4,10 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -18,7 +18,7 @@ import com.cleverlycode.notesly.domain.model.Note
 @Composable
 fun NoteCards(
     notes: List<Note>,
-    listState: LazyGridState,
+    listState: LazyStaggeredGridState,
     isGridView: Boolean,
     navigateToNoteDetail: (String, Long) -> Unit,
     onClick: (Long, (String, Long) -> Unit) -> Unit
@@ -28,8 +28,8 @@ fun NoteCards(
         animationSpec = tween()
     )
 
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(columns),
+    LazyVerticalStaggeredGrid(
+        columns = StaggeredGridCells.Fixed(columns),
         modifier = Modifier.animateContentSize(),
         state = listState,
         horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.horizontal_margin)),

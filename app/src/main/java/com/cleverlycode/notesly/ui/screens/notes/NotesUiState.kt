@@ -1,7 +1,6 @@
 package com.cleverlycode.notesly.ui.screens.notes
 
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import com.cleverlycode.notesly.domain.model.Note
 
 data class NotesUiState(
@@ -11,7 +10,7 @@ data class NotesUiState(
     val showDialog: Boolean = false,
     val isLoading: Boolean = false,
     val search: String = "",
-    val listState: LazyGridState = LazyGridState(),
+    val listState: LazyStaggeredGridState = LazyStaggeredGridState(),
     val isGridView: Boolean = false
 )
 
