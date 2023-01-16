@@ -3,20 +3,19 @@ package com.cleverlycode.notesly.ui.composables
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.cleverlycode.notesly.R
 import com.cleverlycode.notesly.domain.model.Note
 import com.cleverlycode.notesly.ui.screens.notes.NoteType
+import com.cleverlycode.notesly.ui.theme.AppTheme
 import com.cleverlycode.notesly.ui.theme.GreenCard
 import com.cleverlycode.notesly.ui.theme.RedCard
 import com.cleverlycode.notesly.ui.theme.YellowCard
@@ -41,24 +40,22 @@ fun NoteCard(
         onClick = { onClick(note.id, navigateToNoteDetail) },
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        shape = RoundedCornerShape(dimensionResource(id = R.dimen.card_rounded_corner_note)),
+            .padding(vertical = AppTheme.dimens.vertical_margin),
+        shape = RoundedCornerShape(size = AppTheme.dimens.rounded_card_note),
         colors = CardDefaults.cardColors(containerColor = colors[note.noteType] ?: RedCard)
     ) {
         Column(
             modifier = Modifier.padding
                 (
-                vertical = dimensionResource(
-                    id = if (isGridView) R.dimen.vertical_margin_notes
-                    else R.dimen.vertical_margin
-                ),
-                horizontal = dimensionResource(id = R.dimen.horizontal_margin)
+                vertical = if (isGridView) AppTheme.dimens.vertical_margin_large
+                else AppTheme.dimens.vertical_margin,
+                horizontal = AppTheme.dimens.horizontal_margin
             )
         ) {
             if (note.title.isNotBlank()) {
                 Row(
                     modifier = Modifier
-                        .padding(vertical = 8.dp)
+                        .padding(vertical = AppTheme.dimens.vertical_margin)
                         .fillMaxWidth()
                 ) {
                     Text(
@@ -75,7 +72,7 @@ fun NoteCard(
             if (isGridView) {
                 Row(
                     modifier = Modifier
-                        .padding(vertical = 8.dp)
+                        .padding(vertical = AppTheme.dimens.vertical_margin)
                         .fillMaxWidth()
                 ) {
                     Text(
@@ -83,40 +80,47 @@ fun NoteCard(
                             .getDateInstance(DateFormat.SHORT)
                             .format(note.dateUpdated),
                         color = Color.DarkGray,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Light
+                        fontSize = 16.sp
                     )
                 }
 
                 if (note.noteType != NoteType.TODO.value && note.description.isNotBlank()) {
                     Row(
                         modifier = Modifier
-                            .padding(vertical = 8.dp)
+                            .padding(vertical = AppTheme.dimens.vertical_margin)
                             .fillMaxWidth()
                     ) {
                         Text(
                             text = note.description,
                             color = Color.DarkGray,
                             fontSize = 16.sp,
-                            fontWeight = FontWeight.Light,
                             maxLines = 4,
                             overflow = TextOverflow.Ellipsis
                         )
                     }
                 } else if (note.noteType == NoteType.TODO.value && note.tasks.isNotEmpty()) {
-                    Row(
-                        modifier = Modifier
-                            .padding(vertical = 8.dp)
-                            .fillMaxWidth()
-                    ) {
-                        Text(
-                            text = if (note.tasks.isNotEmpty()) note.tasks[0].name else "",
-                            color = Color.DarkGray,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Light,
-                            maxLines = 4,
-                            overflow = TextOverflow.Ellipsis
-                        )
+                    note.tasks.forEachIndexed { index, task ->
+                        if (index < 2) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth().padding(vertical = AppTheme.dimens.small_vertical_margin),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    painter = painterResource(
+                                        id = if (task.isDone) R.drawable.ic_checkbox
+                                        else R.drawable.ic_check_box_outline
+                                    ),
+                                    tint = Color.Black,
+                                    contentDescription = null
+                                )
+                                Text(
+                                    text = task.name,
+                                    modifier = Modifier.padding(start = AppTheme.dimens.small_margin),
+                                    color = Color.Black
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -125,24 +129,38 @@ fun NoteCard(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 8.dp)
+                        .padding(vertical = AppTheme.dimens.vertical_margin),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         text = SimpleDateFormat.getDateInstance(DateFormat.SHORT)
                             .format(note.dateUpdated),
                         color = Color.DarkGray,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Light
+                        fontSize = 16.sp
                     )
-                    Spacer(modifier = Modifier.width(12.dp))
-                    if (note.description.isNotBlank() && note.noteType != NoteType.TODO.value) {
+                    Spacer(modifier = Modifier.width(width = AppTheme.dimens.spacer))
+                    if (note.noteType != NoteType.TODO.value && note.description.isNotBlank()) {
                         Text(
                             text = note.description,
                             color = Color.DarkGray,
                             fontSize = 16.sp,
-                            fontWeight = FontWeight.Light,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
+                        )
+                    } else if (note.noteType == NoteType.TODO.value && note.tasks.isNotEmpty()) {
+                        Icon(
+                            painter = painterResource(
+                                id = if (note.tasks[0].isDone) R.drawable.ic_checkbox
+                                else R.drawable.ic_check_box_outline
+                            ),
+                            tint = Color.Black,
+                            contentDescription = null
+                        )
+
+                        Text(
+                            text = note.tasks[0].name,
+                            modifier = Modifier.padding(start = AppTheme.dimens.small_margin),
+                            color = Color.Black
                         )
                     }
                 }

@@ -9,14 +9,12 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.cleverlycode.notesly.R
@@ -24,6 +22,7 @@ import com.cleverlycode.notesly.ui.composables.AlertDialog
 import com.cleverlycode.notesly.ui.composables.NoteDetailTopAppBar
 import com.cleverlycode.notesly.ui.composables.Tasks
 import com.cleverlycode.notesly.ui.screens.notes.NoteType
+import com.cleverlycode.notesly.ui.theme.AppTheme
 import com.cleverlycode.notesly.ui.theme.NoteslyTheme
 
 @Composable
@@ -44,7 +43,7 @@ fun NoteScreen(
     }
 
     Scaffold(
-        modifier = modifier,
+        modifier = modifier.padding(horizontal = AppTheme.dimens.horizontal_margin),
         topBar = {
             NoteDetailTopAppBar(
                 title = stringResource(
@@ -70,7 +69,7 @@ fun NoteScreen(
         },
         content = { innerPadding ->
             Column(modifier = Modifier.padding(innerPadding)) {
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(height = AppTheme.dimens.spacer))
                 Text(
                     text = noteUiState.dateUpdated,
                     modifier = Modifier.fillMaxWidth(),
@@ -117,7 +116,7 @@ fun NoteScreen(
                         onValueChange = { viewModel.onNoteChange(newValue = it) },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = dimensionResource(id = R.dimen.horizontal_margin)),
+                            .padding(horizontal = AppTheme.dimens.horizontal_margin),
                         textStyle = MaterialTheme.typography.bodyLarge,
                         colors = TextFieldDefaults.textFieldColors(
                             containerColor = MaterialTheme.colorScheme.background,

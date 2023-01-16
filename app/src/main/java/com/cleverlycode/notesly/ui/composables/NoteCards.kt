@@ -11,9 +11,8 @@ import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
-import com.cleverlycode.notesly.R
 import com.cleverlycode.notesly.domain.model.Note
+import com.cleverlycode.notesly.ui.theme.AppTheme
 
 @Composable
 fun NoteCards(
@@ -32,7 +31,7 @@ fun NoteCards(
         columns = StaggeredGridCells.Fixed(columns),
         modifier = Modifier.animateContentSize(),
         state = listState,
-        horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.horizontal_margin)),
+        horizontalArrangement = Arrangement.spacedBy(space = AppTheme.dimens.margin),
     ) {
         items(notes) { note ->
             NoteCard(

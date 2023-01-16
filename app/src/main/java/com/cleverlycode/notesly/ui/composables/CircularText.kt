@@ -20,10 +20,11 @@ fun TextWithShape(
     textStyle: TextStyle,
     shapeSize: Dp,
     color: Color,
-    textColor: Color
+    textColor: Color,
+    modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .size(shapeSize)
             .clip(shape)
             .background(color = color),

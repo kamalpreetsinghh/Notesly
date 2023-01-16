@@ -11,7 +11,7 @@ data class NotesUiState(
     val isLoading: Boolean = false,
     val search: String = "",
     val listState: LazyStaggeredGridState = LazyStaggeredGridState(),
-    val isGridView: Boolean = false
+    val isGridView: Boolean = true
 )
 
 enum class NoteType(val value: String) {

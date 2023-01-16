@@ -12,11 +12,10 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import com.cleverlycode.notesly.R
 import com.cleverlycode.notesly.ui.screens.notedetail.Task
+import com.cleverlycode.notesly.ui.theme.AppTheme
 
 @Composable
 fun TaskItem(
@@ -33,7 +32,7 @@ fun TaskItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                horizontal = dimensionResource(id = R.dimen.horizontal_margin)
+                horizontal = AppTheme.dimens.horizontal_margin
             )
     ) {
         Checkbox(
@@ -50,7 +49,7 @@ fun TaskItem(
             value = task.name,
             onValueChange = { onChange(taskId, it) },
             modifier = Modifier
-                .padding(start = dimensionResource(id = R.dimen.padding_medium))
+                .padding(start = AppTheme.dimens.horizontal_margin)
                 .alpha(alpha = alpha)
                 .onFocusChanged {
                     if (it.isFocused) {

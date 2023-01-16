@@ -19,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -27,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.cleverlycode.notesly.R
 import com.cleverlycode.notesly.ui.composables.*
+import com.cleverlycode.notesly.ui.theme.AppTheme
 import com.cleverlycode.notesly.ui.theme.SearchBarColorDark
 import com.cleverlycode.notesly.ui.theme.SearchBarColorLight
 
@@ -43,8 +43,8 @@ fun NotesScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(
-                horizontal = dimensionResource(id = R.dimen.horizontal_margin),
-                vertical = dimensionResource(id = R.dimen.vertical_margin)
+                horizontal = AppTheme.dimens.horizontal_margin,
+                vertical = AppTheme.dimens.vertical_margin
             )
             .pointerInput(Unit) {
                 detectTapGestures(onTap = { focusManager.clearFocus() })
@@ -60,10 +60,10 @@ fun NotesScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
-                        top = dimensionResource(id = R.dimen.vertical_margin_large),
-                        bottom = dimensionResource(id = R.dimen.vertical_margin)
+                        top = AppTheme.dimens.vertical_margin_extra_large,
+                        bottom = AppTheme.dimens.vertical_margin
                     ),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.Center
             ) {
                 stringResource(id = R.string.my_label).forEach {
                     TextWithShape(
@@ -72,7 +72,8 @@ fun NotesScreen(
                         textStyle = MaterialTheme.typography.displayMedium,
                         shapeSize = 44.dp,
                         color = MaterialTheme.colorScheme.primary,
-                        textColor = Color.White
+                        textColor = Color.White,
+                        modifier = Modifier.padding(horizontal = AppTheme.dimens.extra_small_margin)
                     )
                 }
                 stringResource(id = R.string.notes_label).forEach {
@@ -82,7 +83,8 @@ fun NotesScreen(
                         textStyle = MaterialTheme.typography.displayMedium,
                         shapeSize = 44.dp,
                         color = MaterialTheme.colorScheme.surface,
-                        textColor = MaterialTheme.colorScheme.primary
+                        textColor = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(horizontal = AppTheme.dimens.extra_small_margin)
                     )
                 }
             }
@@ -90,7 +92,7 @@ fun NotesScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = dimensionResource(id = R.dimen.vertical_margin)),
+                    .padding(vertical = AppTheme.dimens.vertical_margin),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -148,7 +150,7 @@ fun NotesScreen(
                 ) {
                     Text(
                         text = stringResource(id = R.string.trash_notes_message),
-                        modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.vertical_margin)),
+                        modifier = Modifier.padding(vertical = AppTheme.dimens.vertical_margin),
                         color = MaterialTheme.colorScheme.onSurface,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Light
@@ -241,7 +243,7 @@ fun SearchBar(
         onValueChange = { onChange(it) },
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = dimensionResource(id = R.dimen.vertical_margin)),
+            .padding(vertical = AppTheme.dimens.vertical_margin),
         placeholder = { Text(text = stringResource(id = R.string.searchbar_placeholder)) },
         leadingIcon = {
             Icon(

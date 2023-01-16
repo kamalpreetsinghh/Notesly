@@ -143,7 +143,7 @@ fun NotesMenu(
             onClick = { changeNotesLayout() },
             leadingIcon = {
                 Icon(
-                    painter = painterResource(id = if(isGridView) R.drawable.ic_list else R.drawable.ic_grid),
+                    painter = painterResource(id = if (isGridView) R.drawable.ic_list else R.drawable.ic_grid),
                     contentDescription = stringResource(id = R.string.delete_all_notes_menu_label)
                 )
             }

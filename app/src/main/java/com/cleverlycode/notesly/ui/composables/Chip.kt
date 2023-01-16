@@ -12,9 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
-import com.cleverlycode.notesly.R
+import com.cleverlycode.notesly.ui.theme.AppTheme
 
 @Composable
 fun Chip(
@@ -44,8 +43,8 @@ fun Chip(
             Text(
                 text = label,
                 modifier = Modifier.padding(
-                    vertical = dimensionResource(id = R.dimen.chip_padding_vertical),
-                    horizontal = dimensionResource(id = R.dimen.chip_padding_horizontal)
+                    vertical = AppTheme.dimens.vertical_padding_chip,
+                    horizontal = AppTheme.dimens.horizontal_padding_chip
                 ),
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold
