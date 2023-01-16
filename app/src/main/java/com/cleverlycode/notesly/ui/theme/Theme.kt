@@ -16,7 +16,8 @@ private val DarkColorPalette = darkColorScheme(
     primaryContainer = Color.Black,
     secondary = Color.White,
     background = Color.Black,
-    onBackground = Color.White
+    onBackground = Color.White,
+    surface = SurfaceDark
 )
 
 private val LightColorPalette = lightColorScheme(
@@ -24,7 +25,8 @@ private val LightColorPalette = lightColorScheme(
     primaryContainer = Color.Black,
     secondary = Color.Black,
     background = LightBackground,
-    onBackground = Color.Black
+    onBackground = Color.Black,
+    surface = SurfaceLight
 )
 
 @Composable

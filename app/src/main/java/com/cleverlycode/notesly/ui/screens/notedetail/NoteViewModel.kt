@@ -74,7 +74,7 @@ class NoteViewModel @Inject constructor(
 
     fun onFocused(taskId: Int) {
         if (taskId == 0 || tasks[taskId - 1].name.isNotBlank()) {    //Check if previous task is not empty
-            if(!tasks[taskId].isVisible) {
+            if (!tasks[taskId].isVisible) {
                 tasks[taskId] = tasks[taskId].copy(isVisible = true, name = "")
             }
 

@@ -17,7 +17,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import com.cleverlycode.notesly.R
 import com.cleverlycode.notesly.ui.screens.notedetail.Task
-import com.cleverlycode.notesly.ui.theme.GreenCard
 
 @Composable
 fun TaskItem(

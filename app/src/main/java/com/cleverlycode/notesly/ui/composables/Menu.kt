@@ -36,7 +36,7 @@ fun Menu(
                 text = {
                     Text(
                         text = stringResource(id = R.string.delete_note_label),
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 },
                 onClick = { onDelete() },
@@ -62,7 +62,7 @@ fun Menu(
                     text = {
                         Text(
                             text = stringResource(id = R.string.remove_from_starred_label),
-                            style = MaterialTheme.typography.titleMedium
+                            style = MaterialTheme.typography.bodyMedium
                         )
                     },
                     onClick = { onMoveTo(NoteType.ALL.value, navigateToNotes) },
@@ -77,7 +77,7 @@ fun Menu(
                     text = {
                         Text(
                             text = stringResource(id = R.string.move_to_starred_label),
-                            style = MaterialTheme.typography.titleMedium
+                            style = MaterialTheme.typography.bodyMedium
                         )
                     },
                     onClick = { onMoveTo(NoteType.STARRED.value, navigateToNotes) },
@@ -95,7 +95,7 @@ fun Menu(
                         text = stringResource(
                             id = R.string.move_to_label, NoteType.TRASH.value,
                         ),
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 },
                 onClick = { onMoveTo(NoteType.TRASH.value, navigateToNotes) },
@@ -130,7 +130,7 @@ fun NotesMenu(
                 text = {
                     Text(
                         text = stringResource(id = R.string.delete_all_notes_menu_label),
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 },
                 onClick = { openDialog() },
@@ -145,7 +145,7 @@ fun NotesMenu(
                 text = {
                     Text(
                         text = stringResource(id = R.string.move_all_notes_trash_menu_label),
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 },
                 onClick = { moveToTrash() },

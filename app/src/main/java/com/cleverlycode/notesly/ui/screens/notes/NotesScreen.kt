@@ -26,10 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.cleverlycode.notesly.R
-import com.cleverlycode.notesly.ui.composables.AlertDialog
-import com.cleverlycode.notesly.ui.composables.NoteCards
-import com.cleverlycode.notesly.ui.composables.NoteTypesChips
-import com.cleverlycode.notesly.ui.composables.NotesMenu
+import com.cleverlycode.notesly.ui.composables.*
 import com.cleverlycode.notesly.ui.theme.SearchBarColorDark
 import com.cleverlycode.notesly.ui.theme.SearchBarColorLight
 
@@ -56,17 +53,44 @@ fun NotesScreen(
     ) {
         Column(
             modifier = if (notesUiState.noteType == NoteType.TRASH.value) modifier
-            else modifier.fillMaxHeight(0.92f)
+            else modifier.fillMaxHeight(0.93f),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = stringResource(id = R.string.my_notes_label),
-                style = MaterialTheme.typography.displayLarge
-            )
-
-            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.spacer)))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        top = dimensionResource(id = R.dimen.vertical_margin_large),
+                        bottom = dimensionResource(id = R.dimen.vertical_margin)
+                    ),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                stringResource(id = R.string.my_label).forEach {
+                    TextWithShape(
+                        char = it,
+                        shape = CircleShape,
+                        textStyle = MaterialTheme.typography.displayMedium,
+                        shapeSize = 44.dp,
+                        color = MaterialTheme.colorScheme.primary,
+                        textColor = Color.White
+                    )
+                }
+                stringResource(id = R.string.notes_label).forEach {
+                    TextWithShape(
+                        char = it,
+                        shape = CircleShape,
+                        textStyle = MaterialTheme.typography.displayMedium,
+                        shapeSize = 44.dp,
+                        color = MaterialTheme.colorScheme.surface,
+                        textColor = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
 
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = dimensionResource(id = R.dimen.vertical_margin)),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -92,8 +116,6 @@ fun NotesScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.spacer)))
-
             if (notesUiState.isLoading) {
                 Box(
                     modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
@@ -101,12 +123,16 @@ fun NotesScreen(
                     CircularProgressIndicator()
                 }
             } else {
-                SearchBar(
-                    search = notesUiState.search,
-                    isVisible = notesUiState.notes.isNotEmpty() || notesUiState.search.isNotEmpty(),
-                    onChange = { newValue -> viewModel.onSearchTextChange(newValue) })
-
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.spacer)))
+                AnimatedVisibility(
+                    visible = notesUiState.notes.isNotEmpty() || notesUiState.search.isNotEmpty(),
+                    enter = expandVertically() + fadeIn(),
+                    exit = shrinkVertically() + fadeOut()
+                ) {
+                    SearchBar(
+                        search = notesUiState.search,
+                        onChange = { newValue -> viewModel.onSearchTextChange(newValue) }
+                    )
+                }
 
                 AnimatedVisibility(
                     visible = notesUiState.noteType == NoteType.TRASH.value &&
@@ -114,15 +140,18 @@ fun NotesScreen(
                 ) {
                     Text(
                         text = stringResource(id = R.string.trash_notes_message),
+                        modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.vertical_margin)),
                         color = MaterialTheme.colorScheme.onSurface,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Light
                     )
-
-                    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.spacer)))
                 }
 
-                if (notesUiState.notes.isEmpty()) {
+                AnimatedVisibility(
+                    visible = notesUiState.notes.isEmpty(),
+                    enter = fadeIn(animationSpec = tween(durationMillis = 100)),
+                    exit = fadeOut(animationSpec = tween(durationMillis = 100))
+                ) {
                     Column(
                         modifier = Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.Center,
@@ -145,7 +174,7 @@ fun NotesScreen(
                     visible = notesUiState.notes.isNotEmpty(),
                     enter = slideInVertically(
                         initialOffsetY = { it / 4 },
-                        animationSpec = tween()
+                        animationSpec = tween(durationMillis = 100)
                     ) + fadeIn(),
                     exit = slideOutVertically(animationSpec = tween()) + fadeOut()
                 ) {
@@ -195,33 +224,29 @@ fun NotesScreen(
 @Composable
 fun SearchBar(
     search: String,
-    isVisible: Boolean,
-    onChange: (String) -> Unit
+    onChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    AnimatedVisibility(
-        visible = isVisible,
-        enter = expandVertically() + fadeIn(),
-        exit = shrinkVertically() + fadeOut()
-    ) {
-        OutlinedTextField(
-            value = search,
-            onValueChange = { onChange(it) },
-            modifier = Modifier.fillMaxWidth(),
-            placeholder = { Text(text = stringResource(id = R.string.searchbar_placeholder)) },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Filled.Search,
-                    contentDescription = stringResource(id = R.string.search_icon)
-                )
-            },
-            shape = CircleShape,
-            singleLine = true,
-            colors = TextFieldDefaults.textFieldColors(
-                containerColor = if (isSystemInDarkTheme()) SearchBarColorDark else SearchBarColorLight,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
+    OutlinedTextField(
+        value = search,
+        onValueChange = { onChange(it) },
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = dimensionResource(id = R.dimen.vertical_margin)),
+        placeholder = { Text(text = stringResource(id = R.string.searchbar_placeholder)) },
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Filled.Search,
+                contentDescription = stringResource(id = R.string.search_icon)
             )
+        },
+        shape = CircleShape,
+        singleLine = true,
+        colors = TextFieldDefaults.textFieldColors(
+            containerColor = if (isSystemInDarkTheme()) SearchBarColorDark else SearchBarColorLight,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent
         )
-    }
+    )
 }
 

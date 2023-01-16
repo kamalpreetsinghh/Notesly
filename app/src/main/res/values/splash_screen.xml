@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="Theme.Notesly.SplashScreen" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/lightBackground</item>
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_round</item>
         <item name="postSplashScreenTheme">@style/Theme.Notesly</item>
 
         <!-- Status bar and Nav bar configs -->
-        <item name="android:statusBarColor" >@color/lightBackground</item>
+        <item name="android:statusBarColor">@color/lightBackground</item>
         <item name="android:navigationBarColor">@color/lightBackground</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>

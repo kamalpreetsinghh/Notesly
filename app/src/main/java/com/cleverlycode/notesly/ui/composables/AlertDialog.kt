@@ -8,7 +8,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.text.font.FontWeight
 import com.cleverlycode.notesly.R
 
 @Composable
@@ -32,7 +31,7 @@ fun AlertDialog(
         text = {
             Text(
                 text = text,
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.bodyMedium
             )
         },
         onDismissRequest = { onDismiss() },

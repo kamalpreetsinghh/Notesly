@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Notesly</string>
-    <string name="my_notes_label">My Notes</string>
+    <string name="my_label">MY</string>
+    <string name="notes_label">NOTES</string>
     <string name="searchbar_placeholder">Search Notes</string>
     <string name="search_icon">Search</string>
     <string name="create_note_button_description">Create a new note</string>

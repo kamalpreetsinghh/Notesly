@@ -1,5 +1,7 @@
 package com.cleverlycode.notesly.ui.composables
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.toggleable
@@ -7,6 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
@@ -20,10 +23,16 @@ fun Chip(
     isSelected: Boolean = false,
     onSelectionChanged: (String) -> Unit = {}
 ) {
+    val color by animateColorAsState(
+        targetValue = if (isSelected) MaterialTheme.colorScheme.primary
+        else MaterialTheme.colorScheme.onBackground,
+        animationSpec = tween(durationMillis = 150)
+    )
+
     Surface(
         modifier = modifier,
         shape = MaterialTheme.shapes.medium,
-        color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
+        color = color,
         contentColor = if (isSelected) Color.White else MaterialTheme.colorScheme.background
     ) {
         Row(modifier = Modifier
@@ -34,8 +43,11 @@ fun Chip(
         ) {
             Text(
                 text = label,
-                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
-                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(
+                    vertical = dimensionResource(id = R.dimen.chip_padding_vertical),
+                    horizontal = dimensionResource(id = R.dimen.chip_padding_horizontal)
+                ),
+                style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold
             )
         }
