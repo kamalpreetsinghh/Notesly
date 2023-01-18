@@ -2,7 +2,6 @@ package com.cleverlycode.notesly.ui.composables
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -14,18 +13,18 @@ import com.cleverlycode.notesly.ui.screens.notes.NoteType
 
 @Composable
 fun Menu(
-    expanded: Boolean,
-    selectedNoteChip: String,
-    selectedNoteType: String,
+    isExpanded: Boolean,
+    isStarred: Boolean,
     isRecentlyDeleted: Boolean,
     closeMenu: () -> Unit,
     navigateToNotes: () -> Unit,
     onDelete: () -> Unit,
     onRecover: (() -> Unit) -> Unit,
-    onMoveTo: (String, () -> Unit) -> Unit
+    onAddOrRemoveStarred: () -> Unit,
+    onMoveToTrash: (() -> Unit) -> Unit
 ) {
     DropdownMenu(
-        expanded = expanded,
+        expanded = isExpanded,
         onDismissRequest = { closeMenu() },
         properties = PopupProperties(
             dismissOnBackPress = true,
@@ -44,69 +43,59 @@ fun Menu(
                 leadingIcon = {
                     Icon(
                         Icons.Filled.Delete,
-                        contentDescription = stringResource(id = R.string.delete_note_description)
+                        contentDescription = stringResource(id = R.string.delete_note_label)
                     )
                 })
 
             DropdownMenuItem(
-                text = { Text(text = stringResource(id = R.string.recover_note_label)) },
+                text = {
+                    Text(
+                        text = stringResource(id = R.string.recover_note_label),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                },
                 onClick = { onRecover(navigateToNotes) },
                 leadingIcon = {
                     Icon(
                         Icons.Outlined.Refresh,
-                        contentDescription = null
+                        contentDescription = stringResource(id = R.string.recover_note_label)
                     )
                 }
             )
         } else {
-            if (selectedNoteType == NoteType.STARRED.value) {
-                DropdownMenuItem(
-                    text = {
-                        Text(
-                            text = stringResource(id = R.string.remove_from_starred_label),
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    },
-                    onClick = { onMoveTo(NoteType.ALL.value, navigateToNotes) },
-                    leadingIcon = {
-                        Icon(
-                            Icons.Filled.Star,
-                            contentDescription = stringResource(id = R.string.delete_note_description)
-                        )
-                    }
-                )
-            } else if (selectedNoteType == NoteType.ALL.value && selectedNoteChip != NoteType.TODO.value) {
-                DropdownMenuItem(
-                    text = {
-                        Text(
-                            text = stringResource(id = R.string.move_to_starred_label),
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    },
-                    onClick = { onMoveTo(NoteType.STARRED.value, navigateToNotes) },
-                    leadingIcon = {
-                        Icon(
-                            Icons.Filled.Star,
-                            contentDescription = stringResource(id = R.string.delete_note_description)
-                        )
-                    }
-                )
-            }
+            DropdownMenuItem(
+                text = {
+                    Text(
+                        text = if (isStarred) stringResource(id = R.string.remove_from_starred_label)
+                        else stringResource(id = R.string.move_to_starred_label),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                },
+                onClick = { onAddOrRemoveStarred() },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(
+                            id = if (isStarred) R.drawable.ic_star_outline
+                            else R.drawable.ic_star
+                        ),
+                        contentDescription = if (isStarred) stringResource(id = R.string.remove_from_starred_label)
+                        else stringResource(id = R.string.move_to_starred_label)
+                    )
+                }
+            )
 
             DropdownMenuItem(
                 text = {
                     Text(
-                        text = stringResource(
-                            id = R.string.move_to_label, NoteType.TRASH.value,
-                        ),
+                        text = stringResource(id = R.string.move_to_trash_label),
                         style = MaterialTheme.typography.bodyMedium
                     )
                 },
-                onClick = { onMoveTo(NoteType.TRASH.value, navigateToNotes) },
+                onClick = { onMoveToTrash(navigateToNotes) },
                 leadingIcon = {
                     Icon(
                         Icons.Filled.Delete,
-                        contentDescription = stringResource(id = R.string.delete_note_description)
+                        contentDescription = stringResource(id = R.string.move_to_trash_label)
                     )
                 }
             )
@@ -136,7 +125,7 @@ fun NotesMenu(
         DropdownMenuItem(
             text = {
                 Text(
-                    text = if (isGridLayout) "List View" else "Grid View",
+                    text = stringResource(id = if (isGridLayout) R.string.list_view_label else R.string.grid_view_label),
                     style = MaterialTheme.typography.bodyMedium
                 )
             },
@@ -144,7 +133,7 @@ fun NotesMenu(
             leadingIcon = {
                 Icon(
                     painter = painterResource(id = if (isGridLayout) R.drawable.ic_list else R.drawable.ic_grid),
-                    contentDescription = stringResource(id = R.string.delete_all_notes_menu_label)
+                    contentDescription = stringResource(id = if (isGridLayout) R.string.list_view_label else R.string.grid_view_label)
                 )
             }
         )

@@ -19,8 +19,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.cleverlycode.notesly.R
 import com.cleverlycode.notesly.ui.composables.AlertDialog
-import com.cleverlycode.notesly.ui.composables.TopAppBar
 import com.cleverlycode.notesly.ui.composables.TodoItems
+import com.cleverlycode.notesly.ui.composables.TopAppBar
 import com.cleverlycode.notesly.ui.screens.notes.NoteType
 import com.cleverlycode.notesly.ui.theme.AppTheme
 import com.cleverlycode.notesly.ui.theme.NoteslyTheme
@@ -51,8 +51,7 @@ fun NoteScreen(
                     else R.string.edit_note_screen_title
                 ),
                 isEmptyNote = viewModel.isEmptyNote(),
-                selectedNoteChip = viewModel.selectedNoteType,
-                noteType = noteUiState.noteType,
+                isStarred = noteUiState.noteType == NoteType.STARRED.value,
                 isNoteChanged = noteUiState.isNoteChanged,
                 isRecentlyDeleted = noteUiState.isRecentlyDeleted,
                 isMenuExpanded = noteUiState.isMenuExpanded,
@@ -64,7 +63,8 @@ fun NoteScreen(
                 onBackButtonClick = { navigate -> viewModel.onBackButtonClick(navigate) },
                 navigateToNotes = navigateToNotes,
                 onRecover = { navigate -> viewModel.onRecoverClick(navigate) },
-                onMoveTo = { moveTo, navigate -> viewModel.onMoveToClick(moveTo, navigate) }
+                onAddOrRemoveStarred = { viewModel.onAddOrRemoveStarred() },
+                onMoveToTrash = { navigate -> viewModel.moveToTrash(navigate) }
             )
         },
     ) { innerPadding ->

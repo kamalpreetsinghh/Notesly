@@ -29,7 +29,7 @@ class NoteViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle, private val repository: NotesRepository
 ) : ViewModel() {
     private var noteId: Long = checkNotNull(savedStateHandle["noteId"])
-    val selectedNoteType: String = checkNotNull(savedStateHandle["noteType"])
+    private val originalNoteType: String = savedStateHandle["noteType"] ?: NoteType.ALL.value
 
     val noteUiState = mutableStateOf(NoteUiState())
 
@@ -45,7 +45,7 @@ class NoteViewModel @Inject constructor(
 
     init {
         if (isNewNote()) {
-            noteUiState.value = noteUiState.value.copy(noteType = selectedNoteType)
+            noteUiState.value = noteUiState.value.copy(noteType = originalNoteType)
         } else {
             getNote(noteId)
         }
@@ -114,36 +114,17 @@ class NoteViewModel @Inject constructor(
         }
     }
 
-    fun onMoveToClick(moveTo: String, navigateToNotes: () -> Unit) {
+    fun onAddOrRemoveStarred() {
         closeMenu()
-        moveNote(moveTo = moveTo)
+        noteUiState.value = noteUiState.value.copy(noteType = getChangedNoteType())
+        saveOrUpdateNote()
+    }
 
-        if (isNewNote()) {
-            viewModelScope.launch {
-                noteId = saveNoteAsync(
-                    note = Note(
-                        title = title,
-                        description = description,
-                        noteType = noteType,
-                        isRecentlyDeleted = isRecentlyDeleted
-                    )
-                ).await()
-            }
-        } else {
-            updateNote(
-                note = Note(
-                    id = noteId,
-                    title = title,
-                    description = description,
-                    noteType = noteType,
-                    isRecentlyDeleted = isRecentlyDeleted
-                )
-            )
-        }
-
-        if (moveTo == NoteType.TRASH.value) {
-            navigateToNotes()
-        }
+    fun moveToTrash(navigateToNotes: () -> Unit) {
+        closeMenu()
+        noteUiState.value = noteUiState.value.copy(isRecentlyDeleted = true)
+        saveOrUpdateNote()
+        navigateToNotes()
     }
 
     fun onRecoverClick(navigateToNotes: () -> Unit) {
@@ -186,6 +167,9 @@ class NoteViewModel @Inject constructor(
         noteUiState.value = noteUiState.value.copy(isMenuExpanded = false)
     }
 
+    private fun getChangedNoteType(): String =
+        if (noteType == NoteType.ALL.value) NoteType.STARRED.value else NoteType.ALL.value
+
     private fun saveOrUpdateNote() {
         if (isNewNote()) {
             viewModelScope.launch {
@@ -193,7 +177,8 @@ class NoteViewModel @Inject constructor(
                     note = Note(
                         title = title,
                         description = description,
-                        noteType = noteType
+                        noteType = noteType,
+                        isRecentlyDeleted = isRecentlyDeleted
                     )
                 ).await()
             }
@@ -256,14 +241,6 @@ class NoteViewModel @Inject constructor(
         return "${
             SimpleDateFormat.getDateInstance().format(date)
         } at ${SimpleDateFormat.getTimeInstance(DateFormat.SHORT).format(date)}"
-    }
-
-    private fun moveNote(moveTo: String) {
-        if (moveTo == NoteType.TRASH.value) {
-            noteUiState.value = noteUiState.value.copy(isRecentlyDeleted = true)
-        } else {
-            noteUiState.value = noteUiState.value.copy(noteType = moveTo)
-        }
     }
 
     private fun isSavedNote() = noteId != 0L

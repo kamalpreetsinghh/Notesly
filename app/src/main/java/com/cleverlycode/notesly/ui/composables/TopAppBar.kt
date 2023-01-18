@@ -1,23 +1,29 @@
 package com.cleverlycode.notesly.ui.composables
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import com.cleverlycode.notesly.R
+import com.cleverlycode.notesly.ui.theme.AppTheme
+import com.cleverlycode.notesly.ui.theme.LightRed
+import com.cleverlycode.notesly.ui.theme.RedCard
 
 @Composable
 fun TopAppBar(
     title: String,
     isEmptyNote: Boolean,
-    selectedNoteChip: String,
-    noteType: String,
+    isStarred: Boolean,
     isNoteChanged: Boolean,
     isRecentlyDeleted: Boolean,
     isMenuExpanded: Boolean,
@@ -29,7 +35,8 @@ fun TopAppBar(
     onBackButtonClick: (() -> Unit) -> Unit,
     navigateToNotes: () -> Unit,
     onRecover: (() -> Unit) -> Unit,
-    onMoveTo: (String, () -> Unit) -> Unit
+    onAddOrRemoveStarred: () -> Unit,
+    onMoveToTrash: (() -> Unit) -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     CenterAlignedTopAppBar(
@@ -42,13 +49,19 @@ fun TopAppBar(
             )
         },
         navigationIcon = {
-            IconButton(onClick = {
-                onBackButtonClick(navigateToNotes)
-                keyboardController?.hide()
-            }) {
+            IconButton(
+                onClick = {
+                    onBackButtonClick(navigateToNotes)
+                    keyboardController?.hide()
+                },
+                modifier = Modifier
+                    .clip(shape = CircleShape)
+                    .padding(AppTheme.dimens.extra_small_margin),
+                colors = IconButtonDefaults.iconButtonColors(containerColor = LightRed)
+            ) {
                 Icon(
                     imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = "Localized description"
+                    contentDescription = stringResource(id = R.string.back_button_label)
                 )
             }
         },
@@ -68,7 +81,17 @@ fun TopAppBar(
             }
 
             if (!isEmptyNote) {
-                IconButton(onClick = { openMenu() }) {
+                IconButton(
+                    onClick = { openMenu() },
+                    modifier = Modifier
+                        .clip(shape = CircleShape)
+                        .padding(AppTheme.dimens.extra_small_margin),
+                    colors = IconButtonDefaults.iconButtonColors(
+                        containerColor = LightRed,
+                        disabledContainerColor = LightRed
+                    ),
+                    enabled = !isMenuExpanded
+                ) {
                     Icon(
                         imageVector = Icons.Filled.MoreVert,
                         contentDescription = stringResource(id = R.string.menu_note_description)
@@ -77,15 +100,15 @@ fun TopAppBar(
             }
 
             Menu(
-                expanded = isMenuExpanded,
-                selectedNoteChip = selectedNoteChip,
-                selectedNoteType = noteType,
+                isExpanded = isMenuExpanded,
+                isStarred = isStarred,
                 isRecentlyDeleted = isRecentlyDeleted,
                 navigateToNotes = navigateToNotes,
                 closeMenu = closeMenu,
                 onDelete = openDialog,
                 onRecover = onRecover,
-                onMoveTo = onMoveTo
+                onAddOrRemoveStarred = onAddOrRemoveStarred,
+                onMoveToTrash = onMoveToTrash
             )
         },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(

@@ -14,7 +14,6 @@
     <string name="cancel_label">Cancel</string>
     <string name="delete_note_label">Delete</string>
     <string name="recover_note_label">Recover</string>
-    <string name="move_to_label">Move to %1$s</string>
     <string name="trash_notes_message">Notes are available here for 30 days. After that time, these notes will be permanently deleted.</string>
     <string name="delete_note_description">Delete note</string>
     <string name="done_note_description">Save Note</string>
@@ -24,4 +23,8 @@
     <string name="note_error_message">There is some problem in this note.</string>
     <string name="move_to_starred_label">Move to starred</string>
     <string name="remove_from_starred_label">Remove from starred</string>
+    <string name="move_to_trash_label">Move to trash</string>
+    <string name="list_view_label">List View</string>
+    <string name="grid_view_label">Grid View</string>
+    <string name="back_button_label">Back Button</string>
 </resources>
