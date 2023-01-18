@@ -13,10 +13,10 @@ class Dimensions(
     val vertical_margin_large: Dp = 16.dp,
     val vertical_margin_extra_large: Dp = 32.dp,
     val spacer: Dp = 12.dp,
-    val vertical_padding_chip: Dp = 14.dp,
-    val horizontal_padding_chip: Dp = 14.dp,
+    val vertical_padding_chip: Dp = 13.dp,
+    val horizontal_padding_chip: Dp = 13.dp,
     val width_alert: Dp = 280.dp,
-    val rounded_card_note: Dp = 20.dp,
+    val rounded_card_note: Dp = 18.dp,
 )
 
 val phoneDimensions = Dimensions()

@@ -77,6 +77,7 @@ fun NoteCard(
         NoteType.STARRED.value to YellowCard,
         NoteType.TODO.value to GreenCard
     )
+    val noteType = note.noteType
 
     Card(
         onClick = { onClick(note.id, navigateToNoteDetail) },
@@ -84,7 +85,7 @@ fun NoteCard(
             .fillMaxWidth()
             .padding(vertical = AppTheme.dimens.vertical_margin),
         shape = RoundedCornerShape(size = AppTheme.dimens.rounded_card_note),
-        colors = CardDefaults.cardColors(containerColor = colors[note.noteType] ?: RedCard)
+        colors = CardDefaults.cardColors(containerColor = colors[noteType] ?: RedCard)
     ) {
         Column(
             modifier = Modifier.padding
@@ -126,7 +127,7 @@ fun NoteCard(
                     )
                 }
 
-                if (note.noteType != NoteType.TODO.value && note.description.isNotBlank()) {
+                if (noteType != NoteType.TODO.value && note.description.isNotBlank()) {
                     Row(
                         modifier = Modifier
                             .padding(vertical = AppTheme.dimens.vertical_margin)
@@ -140,7 +141,7 @@ fun NoteCard(
                             overflow = TextOverflow.Ellipsis
                         )
                     }
-                } else if (note.noteType == NoteType.TODO.value && note.tasks.isNotEmpty()) {
+                } else if (noteType == NoteType.TODO.value && note.tasks.isNotEmpty()) {
                     note.tasks.forEachIndexed { index, task ->
                         if (index < 2) {
                             Row(
@@ -182,7 +183,7 @@ fun NoteCard(
                         fontSize = 16.sp
                     )
                     Spacer(modifier = Modifier.width(width = AppTheme.dimens.spacer))
-                    if (note.noteType != NoteType.TODO.value && note.description.isNotBlank()) {
+                    if (noteType != NoteType.TODO.value && note.description.isNotBlank()) {
                         Text(
                             text = note.description,
                             color = Color.DarkGray,
@@ -190,7 +191,7 @@ fun NoteCard(
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
-                    } else if (note.noteType == NoteType.TODO.value && note.tasks.isNotEmpty()) {
+                    } else if (noteType == NoteType.TODO.value && note.tasks.isNotEmpty()) {
                         Icon(
                             painter = painterResource(
                                 id = if (note.tasks[0].isDone) R.drawable.ic_checkbox
