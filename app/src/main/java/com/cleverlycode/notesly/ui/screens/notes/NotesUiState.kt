@@ -4,14 +4,14 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import com.cleverlycode.notesly.domain.model.Note
 
 data class NotesUiState(
-    val noteType: String = NoteType.ALL.value,
+    val selectedChip: String = NoteType.ALL.value,
     val notes: List<Note> = emptyList(),
     val isMenuExpanded: Boolean = false,
     val showDialog: Boolean = false,
     val isLoading: Boolean = false,
     val search: String = "",
     val listState: LazyStaggeredGridState = LazyStaggeredGridState(),
-    val isGridView: Boolean = true
+    val isGridLayout: Boolean = true
 )
 
 enum class NoteType(val value: String) {
@@ -21,6 +21,6 @@ enum class NoteType(val value: String) {
     TRASH("Trash"),
 }
 
-fun getNoteTypes(): List<NoteType> {
-    return listOf(NoteType.ALL, NoteType.STARRED, NoteType.TODO, NoteType.TRASH)
-}
+fun getNoteTypes(): List<String> =
+    listOf(NoteType.ALL.value, NoteType.STARRED.value, NoteType.TODO.value, NoteType.TRASH.value)
+

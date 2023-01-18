@@ -13,7 +13,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.cleverlycode.notesly.R
 
 @Composable
-fun NoteDetailTopAppBar(
+fun TopAppBar(
     title: String,
     isEmptyNote: Boolean,
     selectedNoteChip: String,
@@ -88,7 +88,7 @@ fun NoteDetailTopAppBar(
                 onMoveTo = onMoveTo
             )
         },
-        colors = TopAppBarDefaults.topAppBarColors(
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.background,
             navigationIconContentColor = MaterialTheme.colorScheme.primary,
             titleContentColor = MaterialTheme.colorScheme.primary,

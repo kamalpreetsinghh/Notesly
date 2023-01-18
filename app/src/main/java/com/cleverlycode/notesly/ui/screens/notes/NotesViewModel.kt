@@ -19,8 +19,8 @@ class NotesViewModel @Inject constructor(
     private val repository: NotesRepository
 ) : ViewModel() {
     val notesUiState = mutableStateOf(NotesUiState())
-    private val noteType get() = notesUiState.value.noteType
-    private val isGridView get() = notesUiState.value.isGridView
+    private val noteType get() = notesUiState.value.selectedChip
+    private val isGridLayout get() = notesUiState.value.isGridLayout
     private var allNotes: List<Note> = emptyList()
 
     init {
@@ -51,14 +51,14 @@ class NotesViewModel @Inject constructor(
         val filteredNotes = getFilteredNotes(allNotes, noteType)
         notesUiState.value = notesUiState.value.copy(
             notes = filteredNotes,
-            noteType = noteType,
+            selectedChip = noteType,
             listState = LazyStaggeredGridState(initialFirstVisibleItemIndex = 0)
         )
     }
 
     fun changeNotesLayout() {
         notesUiState.value =
-            notesUiState.value.copy(isGridView = !isGridView, isMenuExpanded = false)
+            notesUiState.value.copy(isGridLayout = !isGridLayout, isMenuExpanded = false)
     }
 
     fun onCreateNoteButtonClick(navigateToNoteDetail: (String, Long) -> Unit) {

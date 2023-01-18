@@ -118,7 +118,7 @@ fun Menu(
 fun NotesMenu(
     expanded: Boolean,
     noteType: String,
-    isGridView: Boolean,
+    isGridLayout: Boolean,
     isNotesEmpty: Boolean,
     onDismissRequest: () -> Unit,
     moveToTrash: () -> Unit,
@@ -136,14 +136,14 @@ fun NotesMenu(
         DropdownMenuItem(
             text = {
                 Text(
-                    text = if (isGridView) "List View" else "Grid View",
+                    text = if (isGridLayout) "List View" else "Grid View",
                     style = MaterialTheme.typography.bodyMedium
                 )
             },
             onClick = { changeNotesLayout() },
             leadingIcon = {
                 Icon(
-                    painter = painterResource(id = if (isGridView) R.drawable.ic_list else R.drawable.ic_grid),
+                    painter = painterResource(id = if (isGridLayout) R.drawable.ic_list else R.drawable.ic_grid),
                     contentDescription = stringResource(id = R.string.delete_all_notes_menu_label)
                 )
             }

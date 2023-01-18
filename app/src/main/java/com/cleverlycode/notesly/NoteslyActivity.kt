@@ -16,14 +16,17 @@ class NoteslyActivity() : ComponentActivity() {
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val viewModel: NotesViewModel by viewModels()
         WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        val viewModel: NotesViewModel by viewModels()
         installSplashScreen().setKeepOnScreenCondition(condition = {
             viewModel.notesUiState.value.isLoading
         })
-        if (resources.getBoolean(R.bool.portrait_only)) {
+
+        if (resources.getBoolean(R.bool.portrait_only)) {   //In phones only portrait mode
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
         }
+
         setContent {
             NoteslyApp()
         }

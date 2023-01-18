@@ -13,8 +13,8 @@ class Dimensions(
     val vertical_margin_large: Dp = 16.dp,
     val vertical_margin_extra_large: Dp = 32.dp,
     val spacer: Dp = 12.dp,
-    val vertical_padding_chip: Dp = 16.dp,
-    val horizontal_padding_chip: Dp = 16.dp,
+    val vertical_padding_chip: Dp = 14.dp,
+    val horizontal_padding_chip: Dp = 14.dp,
     val width_alert: Dp = 280.dp,
     val rounded_card_note: Dp = 20.dp,
 )
@@ -23,7 +23,7 @@ val phoneDimensions = Dimensions()
 
 val tabletDimensions = Dimensions(
     extra_small_margin = 4.dp,
-    horizontal_padding_chip = 48.dp,
+    horizontal_padding_chip = 44.dp,
     width_alert = 500.dp,
     horizontal_margin = 32.dp,
     vertical_margin_extra_large = 32.dp,

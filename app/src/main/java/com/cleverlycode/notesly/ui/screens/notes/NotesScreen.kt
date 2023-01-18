@@ -3,7 +3,6 @@ package com.cleverlycode.notesly.ui.screens.notes
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -27,8 +26,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.cleverlycode.notesly.R
 import com.cleverlycode.notesly.ui.composables.*
 import com.cleverlycode.notesly.ui.theme.AppTheme
-import com.cleverlycode.notesly.ui.theme.SearchBarColorDark
-import com.cleverlycode.notesly.ui.theme.SearchBarColorLight
 
 @Composable
 fun NotesScreen(
@@ -39,8 +36,8 @@ fun NotesScreen(
     val notesUiState by viewModel.notesUiState
     val focusManager = LocalFocusManager.current
 
-    Box(
-        modifier = Modifier
+    Scaffold(
+        modifier = modifier
             .fillMaxSize()
             .padding(
                 horizontal = AppTheme.dimens.horizontal_margin,
@@ -49,13 +46,8 @@ fun NotesScreen(
             .pointerInput(Unit) {
                 detectTapGestures(onTap = { focusManager.clearFocus() })
             }
-            .windowInsetsPadding(WindowInsets.navigationBars)
-    ) {
-        Column(
-            modifier = if (notesUiState.noteType == NoteType.TRASH.value) modifier
-            else modifier.fillMaxHeight(0.93f),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+            .windowInsetsPadding(WindowInsets.navigationBars),
+        topBar = {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -65,9 +57,9 @@ fun NotesScreen(
                     ),
                 horizontalArrangement = Arrangement.Center
             ) {
-                stringResource(id = R.string.my_label).forEach {
+                stringResource(id = R.string.my_label).forEach { char ->
                     TextWithShape(
-                        char = it,
+                        char = char,
                         shape = CircleShape,
                         textStyle = MaterialTheme.typography.displayMedium,
                         shapeSize = 44.dp,
@@ -76,9 +68,9 @@ fun NotesScreen(
                         modifier = Modifier.padding(horizontal = AppTheme.dimens.extra_small_margin)
                     )
                 }
-                stringResource(id = R.string.notes_label).forEach {
+                stringResource(id = R.string.notes_label).forEach { char ->
                     TextWithShape(
-                        char = it,
+                        char = char,
                         shape = CircleShape,
                         textStyle = MaterialTheme.typography.displayMedium,
                         shapeSize = 44.dp,
@@ -88,7 +80,44 @@ fun NotesScreen(
                     )
                 }
             }
-
+        },
+        bottomBar = {
+            val selectedChip = notesUiState.selectedChip
+            AnimatedVisibility(
+                visible = selectedChip != NoteType.TRASH.value,
+                enter = scaleIn(),
+                exit = scaleOut()
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(AppTheme.dimens.small_margin),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Button(
+                        onClick = { viewModel.onCreateNoteButtonClick(navigateToNoteDetail = navigateToNoteDetail) },
+                        modifier = Modifier.size(52.dp),
+                        shape = CircleShape,
+                        contentPadding = PaddingValues(0.dp)
+                    ) {
+                        Icon(
+                            if (selectedChip == NoteType.TODO.value) Icons.Filled.Check
+                            else Icons.Filled.Add,
+                            modifier = Modifier.size(32.dp),
+                            contentDescription = stringResource(id = R.string.create_note_button_description),
+                            tint = Color.White
+                        )
+                    }
+                }
+            }
+        },
+    ) { contentPadding ->
+        Column(
+            modifier = Modifier.padding(contentPadding),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            val selectedChip = notesUiState.selectedChip
+            val notes = notesUiState.notes
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -96,9 +125,9 @@ fun NotesScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                NoteTypesChips(
-                    noteTypes = getNoteTypes(),
-                    selectedNoteType = notesUiState.noteType,
+                Chips(
+                    items = getNoteTypes(),
+                    selectedItem = selectedChip,
                     onSelectionChanged = { noteType -> viewModel.onClickNoteTypeChip(noteType) },
                     modifier = Modifier.fillMaxWidth(0.93f)
                 )
@@ -115,9 +144,9 @@ fun NotesScreen(
                     }
                     NotesMenu(
                         expanded = notesUiState.isMenuExpanded,
-                        noteType = notesUiState.noteType,
-                        isGridView = notesUiState.isGridView,
-                        isNotesEmpty = notesUiState.notes.isEmpty(),
+                        noteType = selectedChip,
+                        isGridLayout = notesUiState.isGridLayout,
+                        isNotesEmpty = notes.isEmpty(),
                         onDismissRequest = { viewModel.closeMenu() },
                         moveToTrash = { viewModel.deleteNotes() },
                         openDialog = { viewModel.openDialog() },
@@ -128,13 +157,14 @@ fun NotesScreen(
 
             if (notesUiState.isLoading) {
                 Box(
-                    modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator()
                 }
             } else {
                 AnimatedVisibility(
-                    visible = notesUiState.notes.isNotEmpty() || notesUiState.search.isNotEmpty(),
+                    visible = notes.isNotEmpty() || notesUiState.search.isNotEmpty(),
                     enter = expandVertically() + fadeIn(),
                     exit = shrinkVertically() + fadeOut()
                 ) {
@@ -145,20 +175,27 @@ fun NotesScreen(
                 }
 
                 AnimatedVisibility(
-                    visible = notesUiState.noteType == NoteType.TRASH.value &&
-                            (notesUiState.notes.isNotEmpty() || notesUiState.search.isNotEmpty())
+                    visible = notes.isNotEmpty(),
+                    enter = slideInVertically(
+                        initialOffsetY = { it / 4 },
+                        animationSpec = tween(durationMillis = 100)
+                    ) + fadeIn(),
+                    exit = slideOutVertically(animationSpec = tween()) + fadeOut()
                 ) {
-                    Text(
-                        text = stringResource(id = R.string.trash_notes_message),
-                        modifier = Modifier.padding(vertical = AppTheme.dimens.vertical_margin),
-                        color = MaterialTheme.colorScheme.onSurface,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Light
-                    )
+                    NoteCards(
+                        notes = notes,
+                        listState = notesUiState.listState,
+                        isGridLayout = notesUiState.isGridLayout,
+                        navigateToNoteDetail = navigateToNoteDetail
+                    ) { noteId, navigateToNoteDetail ->
+                        viewModel.onClickNote(
+                            noteId, navigateToNoteDetail
+                        )
+                    }
                 }
 
                 AnimatedVisibility(
-                    visible = notesUiState.notes.isEmpty(),
+                    visible = notes.isEmpty(),
                     enter = fadeIn(animationSpec = tween(durationMillis = 100)),
                     exit = fadeOut(animationSpec = tween(durationMillis = 100))
                 ) {
@@ -168,12 +205,12 @@ fun NotesScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         val emptyNoteMsg =
-                            when (notesUiState.noteType) {
+                            when (selectedChip) {
                                 NoteType.ALL.value -> stringResource(id = R.string.empty_notes_all)
                                 else -> stringResource(
                                     id = R.string.empty_notes,
-                                    if (notesUiState.noteType == NoteType.TRASH.value) "Recently Deleted"
-                                    else notesUiState.noteType
+                                    if (selectedChip == NoteType.TRASH.value) "Recently Deleted"
+                                    else selectedChip
                                 )
                             }
                         Text(text = emptyNoteMsg)
@@ -181,43 +218,16 @@ fun NotesScreen(
                 }
 
                 AnimatedVisibility(
-                    visible = notesUiState.notes.isNotEmpty(),
-                    enter = slideInVertically(
-                        initialOffsetY = { it / 4 },
-                        animationSpec = tween(durationMillis = 100)
-                    ) + fadeIn(),
-                    exit = slideOutVertically(animationSpec = tween()) + fadeOut()
+                    visible = selectedChip == NoteType.TRASH.value &&
+                            (notes.isNotEmpty() || notesUiState.search.isNotEmpty())
                 ) {
-                    NoteCards(
-                        notes = notesUiState.notes,
-                        listState = notesUiState.listState,
-                        isGridView = notesUiState.isGridView,
-                        navigateToNoteDetail = navigateToNoteDetail
-                    ) { noteId, navigateToNoteDetail ->
-                        viewModel.onClickNote(
-                            noteId, navigateToNoteDetail
-                        )
-                    }
+                    Text(
+                        text = stringResource(id = R.string.trash_notes_message),
+                        modifier = Modifier.padding(vertical = AppTheme.dimens.vertical_margin),
+                        color = MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.bodySmall
+                    )
                 }
-            }
-        }
-
-        if (notesUiState.noteType != NoteType.TRASH.value) {
-            Button(
-                onClick = { viewModel.onCreateNoteButtonClick(navigateToNoteDetail = navigateToNoteDetail) },
-                modifier = Modifier
-                    .size(52.dp)
-                    .align(Alignment.BottomCenter),
-                shape = CircleShape,
-                contentPadding = PaddingValues(0.dp)
-            ) {
-                Icon(
-                    if (notesUiState.noteType == NoteType.TODO.value) Icons.Filled.Check
-                    else Icons.Filled.Add,
-                    modifier = Modifier.size(32.dp),
-                    contentDescription = stringResource(id = R.string.create_note_button_description),
-                    tint = Color.White
-                )
             }
         }
 
@@ -254,7 +264,7 @@ fun SearchBar(
         shape = CircleShape,
         singleLine = true,
         colors = TextFieldDefaults.textFieldColors(
-            containerColor = if (isSystemInDarkTheme()) SearchBarColorDark else SearchBarColorLight,
+            containerColor = MaterialTheme.colorScheme.surface,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent
         )

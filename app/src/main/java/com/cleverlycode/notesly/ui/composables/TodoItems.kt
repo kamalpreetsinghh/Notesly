@@ -3,9 +3,12 @@ package com.cleverlycode.notesly.ui.composables
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -18,7 +21,29 @@ import com.cleverlycode.notesly.ui.screens.notedetail.Task
 import com.cleverlycode.notesly.ui.theme.AppTheme
 
 @Composable
-fun TaskItem(
+fun TodoItems(
+    tasks: State<List<Task>>,
+    onCheckedChange: (Int, Boolean) -> Unit,
+    onChange: (Int, String) -> Unit,
+    onFocused: (Int) -> Unit,
+    focusRequester: FocusRequester
+) {
+    LazyColumn {
+        itemsIndexed(tasks.value) { index, task ->
+            TodoItem(
+                task = task,
+                taskId = index,
+                onCheckedChange = onCheckedChange,
+                onChange = onChange,
+                onFocused = onFocused,
+                focusRequester = focusRequester
+            )
+        }
+    }
+}
+
+@Composable
+fun TodoItem(
     task: Task,
     taskId: Int,
     onCheckedChange: (Int, Boolean) -> Unit,
@@ -27,6 +52,7 @@ fun TaskItem(
     focusRequester: FocusRequester
 ) {
     val alpha = if (task.isVisible) 1f else 0f
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -39,18 +65,17 @@ fun TaskItem(
             checked = task.isDone,
             onCheckedChange = { onCheckedChange(taskId, it) },
             modifier = Modifier
-                .alpha(alpha = alpha)
-                .focusRequester(focusRequester),
-            colors = CheckboxDefaults.colors(
-                checkedColor = MaterialTheme.colorScheme.onSurface
-            )
+                .focusRequester(focusRequester)
+                .alpha(alpha),
+            colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.colorScheme.onSurface)
         )
+
         TextField(
             value = task.name,
             onValueChange = { onChange(taskId, it) },
             modifier = Modifier
                 .padding(start = AppTheme.dimens.horizontal_margin)
-                .alpha(alpha = alpha)
+                .alpha(alpha)
                 .onFocusChanged {
                     if (it.isFocused) {
                         onFocused(taskId)
