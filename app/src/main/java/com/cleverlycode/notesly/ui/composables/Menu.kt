@@ -21,7 +21,8 @@ fun Menu(
     onDelete: () -> Unit,
     onRecover: (() -> Unit) -> Unit,
     onAddOrRemoveStarred: () -> Unit,
-    onMoveToTrash: (() -> Unit) -> Unit
+    onMoveToTrash: (() -> Unit) -> Unit,
+    showSnackbar: (String, SnackbarDuration) -> Unit
 ) {
     DropdownMenu(
         expanded = isExpanded,
@@ -32,6 +33,8 @@ fun Menu(
         )
     ) {
         if (isRecentlyDeleted) {
+            val recoveredMessage = stringResource(id = R.string.note_recovered_snackbar_message)
+
             DropdownMenuItem(
                 text = {
                     Text(
@@ -54,7 +57,10 @@ fun Menu(
                         style = MaterialTheme.typography.bodyMedium
                     )
                 },
-                onClick = { onRecover(navigateToNotes) },
+                onClick = {
+                    onRecover(navigateToNotes)
+                    showSnackbar(recoveredMessage, SnackbarDuration.Short)
+                },
                 leadingIcon = {
                     Icon(
                         Icons.Outlined.Refresh,
@@ -63,6 +69,11 @@ fun Menu(
                 }
             )
         } else {
+            val starredMessage =
+                if (isStarred) stringResource(id = R.string.remove_from_starred_label)
+                else stringResource(id = R.string.move_to_starred_label)
+            val movedToTrashMessage = stringResource(id = R.string.moved_to_trash_snackbar_message)
+
             DropdownMenuItem(
                 text = {
                     Text(
@@ -71,7 +82,10 @@ fun Menu(
                         style = MaterialTheme.typography.bodyMedium
                     )
                 },
-                onClick = { onAddOrRemoveStarred() },
+                onClick = {
+                    onAddOrRemoveStarred()
+                    showSnackbar(starredMessage, SnackbarDuration.Short)
+                },
                 leadingIcon = {
                     Icon(
                         painter = painterResource(
@@ -91,7 +105,10 @@ fun Menu(
                         style = MaterialTheme.typography.bodyMedium
                     )
                 },
-                onClick = { onMoveToTrash(navigateToNotes) },
+                onClick = {
+                    onMoveToTrash(navigateToNotes)
+                    showSnackbar(movedToTrashMessage, SnackbarDuration.Short)
+                },
                 leadingIcon = {
                     Icon(
                         Icons.Filled.Delete,
@@ -112,7 +129,8 @@ fun NotesMenu(
     onDismissRequest: () -> Unit,
     moveToTrash: () -> Unit,
     openDialog: () -> Unit,
-    changeNotesLayout: () -> Unit
+    changeNotesLayout: () -> Unit,
+    showSnackbar: (String, SnackbarDuration) -> Unit
 ) {
     DropdownMenu(
         expanded = expanded,
@@ -156,6 +174,7 @@ fun NotesMenu(
                     }
                 )
             } else {
+                val message = stringResource(id = R.string.all_moved_to_trash_snackbar_message)
                 DropdownMenuItem(
                     text = {
                         Text(
@@ -163,7 +182,10 @@ fun NotesMenu(
                             style = MaterialTheme.typography.bodyMedium
                         )
                     },
-                    onClick = { moveToTrash() },
+                    onClick = {
+                        moveToTrash()
+                        showSnackbar(message, SnackbarDuration.Short)
+                    },
                     leadingIcon = {
                         Icon(
                             Icons.Filled.Delete,

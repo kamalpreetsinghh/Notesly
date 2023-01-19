@@ -27,4 +27,10 @@
     <string name="list_view_label">List View</string>
     <string name="grid_view_label">Grid View</string>
     <string name="back_button_label">Back Button</string>
+    <string name="all_moved_to_trash_snackbar_message">All notes are moved to trash.</string>
+    <string name="notes_deleted_snackbar_message">All notes are permanently deleted.</string>
+    <string name="note_deleted_snackbar_message">The note is deleted.</string>
+    <string name="note_recovered_snackbar_message">The note is recovered from trash.</string>
+    <string name="moved_to_trash_snackbar_message">The note is moved to trash.</string>
+
 </resources>

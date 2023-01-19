@@ -36,7 +36,8 @@ fun TopAppBar(
     navigateToNotes: () -> Unit,
     onRecover: (() -> Unit) -> Unit,
     onAddOrRemoveStarred: () -> Unit,
-    onMoveToTrash: (() -> Unit) -> Unit
+    onMoveToTrash: (() -> Unit) -> Unit,
+    showSnackbar: (String, SnackbarDuration) -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     CenterAlignedTopAppBar(
@@ -108,7 +109,8 @@ fun TopAppBar(
                 onDelete = openDialog,
                 onRecover = onRecover,
                 onAddOrRemoveStarred = onAddOrRemoveStarred,
-                onMoveToTrash = onMoveToTrash
+                onMoveToTrash = onMoveToTrash,
+                showSnackbar = showSnackbar
             )
         },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(

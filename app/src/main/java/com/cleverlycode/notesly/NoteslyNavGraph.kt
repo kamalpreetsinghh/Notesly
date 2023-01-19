@@ -31,12 +31,21 @@ fun NoteslyNavGraph(
             enterTransition = { fadeIn(animationSpec = tween(300)) },
             exitTransition = { fadeOut(animationSpec = tween(300)) }
         ) {
-            NotesScreen(navigateToNoteDetail = { noteType, noteId ->
-                noteslyNavigation.navigateToNoteDetail(
-                    noteType = noteType,
-                    noteId = noteId
-                )
-            })
+            NotesScreen(
+                snackbarHostState = appState.snackbarHostState,
+                navigateToNoteDetail = { noteType, noteId ->
+                    noteslyNavigation.navigateToNoteDetail(
+                        noteType = noteType,
+                        noteId = noteId
+                    )
+                },
+                showSnackbar = { message, duration ->
+                    appState.showSnackbar(
+                        message = message,
+                        duration = duration
+                    )
+                }
+            )
         }
         composable(
             route = Routes.NoteDetail.route,
@@ -47,7 +56,16 @@ fun NoteslyNavGraph(
             enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
             exitTransition = { slideOutHorizontally(targetOffsetX = { it }) }
         ) {
-            NoteScreen(navigateToNotes = { noteslyNavigation.navigateToNotes() })
+            NoteScreen(
+                snackbarHostState = appState.snackbarHostState,
+                navigateToNotes = { noteslyNavigation.navigateToNotes() },
+                showSnackbar = { message, duration ->
+                    appState.showSnackbar(
+                        message = message,
+                        duration = duration
+                    )
+                }
+            )
         }
     }
 }

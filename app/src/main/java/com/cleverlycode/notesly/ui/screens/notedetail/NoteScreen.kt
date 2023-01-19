@@ -24,15 +24,17 @@ import com.cleverlycode.notesly.ui.composables.TopAppBar
 import com.cleverlycode.notesly.ui.screens.notes.NoteType
 import com.cleverlycode.notesly.ui.theme.AppTheme
 import com.cleverlycode.notesly.ui.theme.NoteslyTheme
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun NoteScreen(
+    snackbarHostState: SnackbarHostState,
     navigateToNotes: () -> Unit,
+    showSnackbar: (String, SnackbarDuration) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: NoteViewModel = hiltViewModel()
 ) {
     val noteUiState by viewModel.noteUiState
-
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
 
@@ -64,9 +66,11 @@ fun NoteScreen(
                 navigateToNotes = navigateToNotes,
                 onRecover = { navigate -> viewModel.onRecoverClick(navigate) },
                 onAddOrRemoveStarred = { viewModel.onAddOrRemoveStarred() },
-                onMoveToTrash = { navigate -> viewModel.moveToTrash(navigate) }
+                onMoveToTrash = { navigate -> viewModel.moveToTrash(navigate) },
+                showSnackbar = showSnackbar
             )
         },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
             Spacer(modifier = Modifier.height(height = AppTheme.dimens.spacer))
@@ -137,16 +141,10 @@ fun NoteScreen(
                 dismissButtonText = stringResource(id = R.string.cancel_label),
                 navigateToNotes = navigateToNotes,
                 onDismiss = { viewModel.closeDialog() },
-                confirmButtonClick = { navigate -> viewModel.onDeleteConfirmClick(navigate) }
+                confirmButtonClick = { navigate -> viewModel.onDeleteConfirmClick(navigate) },
+                showSnackbar = showSnackbar,
+                snackbarMessage = stringResource(id = R.string.note_deleted_snackbar_message)
             )
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    NoteslyTheme {
-        NoteScreen(navigateToNotes = {})
     }
 }

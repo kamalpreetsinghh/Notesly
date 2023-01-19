@@ -1,10 +1,7 @@
 package com.cleverlycode.notesly.ui.composables
 
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.cleverlycode.notesly.ui.theme.AppTheme
@@ -17,7 +14,9 @@ fun AlertDialog(
     dismissButtonText: String,
     onDismiss: () -> Unit,
     confirmButtonClick: (() -> Unit) -> Unit,
-    navigateToNotes: () -> Unit = {}
+    navigateToNotes: () -> Unit = {},
+    showSnackbar: (String, SnackbarDuration) -> Unit,
+    snackbarMessage: String
 ) {
     AlertDialog(
         modifier = Modifier.width(width = AppTheme.dimens.width_alert),
@@ -36,7 +35,10 @@ fun AlertDialog(
         onDismissRequest = { onDismiss() },
         confirmButton = {
             TextButton(
-                onClick = { confirmButtonClick(navigateToNotes) }
+                onClick = {
+                    confirmButtonClick(navigateToNotes)
+                    showSnackbar(snackbarMessage, SnackbarDuration.Short)
+                }
             ) {
                 Text(
                     text = confirmButtonText,

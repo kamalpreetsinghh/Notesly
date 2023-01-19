@@ -19,9 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.cleverlycode.notesly.R
 import com.cleverlycode.notesly.ui.composables.*
@@ -29,7 +27,9 @@ import com.cleverlycode.notesly.ui.theme.AppTheme
 
 @Composable
 fun NotesScreen(
+    snackbarHostState: SnackbarHostState,
     navigateToNoteDetail: (String, Long) -> Unit,
+    showSnackbar: (String, SnackbarDuration) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: NotesViewModel = hiltViewModel()
 ) {
@@ -111,6 +111,7 @@ fun NotesScreen(
                 }
             }
         },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { contentPadding ->
         Column(
             modifier = Modifier.padding(contentPadding),
@@ -150,7 +151,8 @@ fun NotesScreen(
                         onDismissRequest = { viewModel.closeMenu() },
                         moveToTrash = { viewModel.deleteNotes() },
                         openDialog = { viewModel.openDialog() },
-                        changeNotesLayout = { viewModel.changeNotesLayout() }
+                        changeNotesLayout = { viewModel.changeNotesLayout() },
+                        showSnackbar = showSnackbar
                     )
                 }
             }
@@ -171,6 +173,18 @@ fun NotesScreen(
                     SearchBar(
                         search = notesUiState.search,
                         onChange = { newValue -> viewModel.onSearchTextChange(newValue) }
+                    )
+                }
+
+                AnimatedVisibility(
+                    visible = selectedChip == NoteType.TRASH.value &&
+                            (notes.isNotEmpty() || notesUiState.search.isNotEmpty())
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.trash_notes_message),
+                        modifier = Modifier.padding(vertical = AppTheme.dimens.vertical_margin),
+                        color = MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.bodySmall
                     )
                 }
 
@@ -216,28 +230,20 @@ fun NotesScreen(
                         Text(text = emptyNoteMsg)
                     }
                 }
-
-                AnimatedVisibility(
-                    visible = selectedChip == NoteType.TRASH.value &&
-                            (notes.isNotEmpty() || notesUiState.search.isNotEmpty())
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.trash_notes_message),
-                        modifier = Modifier.padding(vertical = AppTheme.dimens.vertical_margin),
-                        color = MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
             }
         }
 
         if (notesUiState.showDialog) {
-            AlertDialog(title = stringResource(id = R.string.delete_note_dialog_title),
+            AlertDialog(
+                title = stringResource(id = R.string.delete_note_dialog_title),
                 text = stringResource(id = R.string.delete_note_dialog_text),
                 confirmButtonText = stringResource(id = R.string.delete_note_label),
                 dismissButtonText = stringResource(id = R.string.cancel_label),
                 onDismiss = { viewModel.closeDialog() },
-                confirmButtonClick = { viewModel.emptyTrash() })
+                confirmButtonClick = { viewModel.emptyTrash() },
+                showSnackbar = showSnackbar,
+                snackbarMessage = stringResource(id = R.string.all_moved_to_trash_snackbar_message)
+            )
         }
     }
 }
