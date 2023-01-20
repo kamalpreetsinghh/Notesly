@@ -27,6 +27,7 @@ class NoteslyAppState(
     }
 
     fun showSnackbar(message: String, duration: SnackbarDuration = SnackbarDuration.Short) {
+        snackbarHostState.currentSnackbarData?.dismiss()
         coroutineScope.launch {
             snackbarHostState.showSnackbar(
                 message = message,

@@ -5,6 +5,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.PopupProperties
@@ -19,11 +20,12 @@ fun Menu(
     closeMenu: () -> Unit,
     navigateToNotes: () -> Unit,
     onDelete: () -> Unit,
-    onRecover: (() -> Unit) -> Unit,
+    onRecover: () -> Unit,
     onAddOrRemoveStarred: () -> Unit,
     onMoveToTrash: (() -> Unit) -> Unit,
     showSnackbar: (String, SnackbarDuration) -> Unit
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
     DropdownMenu(
         expanded = isExpanded,
         onDismissRequest = { closeMenu() },
@@ -58,7 +60,8 @@ fun Menu(
                     )
                 },
                 onClick = {
-                    onRecover(navigateToNotes)
+                    keyboardController?.hide()
+                    onRecover()
                     showSnackbar(recoveredMessage, SnackbarDuration.Short)
                 },
                 leadingIcon = {
@@ -106,6 +109,7 @@ fun Menu(
                     )
                 },
                 onClick = {
+                    keyboardController?.hide()
                     onMoveToTrash(navigateToNotes)
                     showSnackbar(movedToTrashMessage, SnackbarDuration.Short)
                 },

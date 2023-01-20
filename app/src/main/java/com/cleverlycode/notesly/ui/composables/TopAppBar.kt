@@ -33,7 +33,7 @@ fun TopAppBar(
     onDoneClick: () -> Unit,
     onBackButtonClick: (() -> Unit) -> Unit,
     navigateToNotes: () -> Unit,
-    onRecover: (() -> Unit) -> Unit,
+    onRecover: () -> Unit,
     onAddOrRemoveStarred: () -> Unit,
     onMoveToTrash: (() -> Unit) -> Unit,
     showSnackbar: (String, SnackbarDuration) -> Unit

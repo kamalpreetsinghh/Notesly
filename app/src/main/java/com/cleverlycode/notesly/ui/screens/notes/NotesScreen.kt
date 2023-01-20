@@ -1,6 +1,7 @@
 package com.cleverlycode.notesly.ui.screens.notes
 
 import androidx.compose.animation.*
+import androidx.compose.animation.core.EaseOut
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -85,9 +86,9 @@ fun NotesScreen(
         bottomBar = {
             val selectedChip = notesUiState.selectedChip
             AnimatedVisibility(
-                visible = notesUiState.showCreateNote && selectedChip != NoteType.TRASH.value,
-                enter = scaleIn(),
-                exit = scaleOut()
+                visible = selectedChip != NoteType.TRASH.value,
+                enter = scaleIn(animationSpec = tween(durationMillis = 250)),
+                exit = scaleOut(animationSpec = tween(durationMillis = 250))
             ) {
                 Row(
                     modifier = Modifier
@@ -169,7 +170,7 @@ fun NotesScreen(
                 }
             } else {
                 AnimatedVisibility(
-                    visible = notesUiState.showCreateNote && (notes.isNotEmpty() || notesUiState.search.isNotEmpty()),
+                    visible = notesUiState.showSearchBar && (notes.isNotEmpty() || notesUiState.search.isNotEmpty()),
                     enter = expandVertically(
                         animationSpec = tween(
                             durationMillis = 250,
@@ -191,7 +192,19 @@ fun NotesScreen(
 
                 AnimatedVisibility(
                     visible = selectedChip == NoteType.TRASH.value &&
-                            (notes.isNotEmpty() || notesUiState.search.isNotEmpty())
+                            (notes.isNotEmpty() || notesUiState.search.isNotEmpty()),
+                    enter = expandVertically(
+                        animationSpec = tween(
+                            durationMillis = 250,
+                            easing = LinearEasing
+                        )
+                    ) + fadeIn(tween(durationMillis = 250, easing = LinearEasing)),
+                    exit = shrinkVertically(
+                        animationSpec = tween(
+                            durationMillis = 250,
+                            easing = EaseOut
+                        )
+                    ) + fadeOut(tween(durationMillis = 250, easing = EaseOut))
                 ) {
                     Text(
                         text = stringResource(id = R.string.trash_notes_message),
@@ -207,7 +220,10 @@ fun NotesScreen(
                         initialOffsetY = { it / 4 },
                         animationSpec = tween(durationMillis = 250, easing = LinearEasing)
                     ) + fadeIn(tween(durationMillis = 250, easing = LinearEasing)),
-                    exit = slideOutVertically(animationSpec = tween()) + fadeOut()
+                    exit = slideOutVertically(
+                        targetOffsetY = { it / 4 },
+                        animationSpec = tween(durationMillis = 250, easing = LinearEasing)
+                    ) + fadeOut(tween(durationMillis = 250, easing = LinearEasing))
                 ) {
                     NoteCards(
                         notes = notes,

@@ -127,7 +127,7 @@ class NoteViewModel @Inject constructor(
         navigateToNotes()
     }
 
-    fun onRecoverClick(navigateToNotes: () -> Unit) {
+    fun onRecoverClick() {
         closeMenu()
         val note = Note(
             id = noteId,
@@ -137,8 +137,6 @@ class NoteViewModel @Inject constructor(
             isRecentlyDeleted = false
         )
         updateNote(note)
-
-        navigateToNotes()
     }
 
     fun onDeleteConfirmClick(navigateToNotes: () -> Unit) {

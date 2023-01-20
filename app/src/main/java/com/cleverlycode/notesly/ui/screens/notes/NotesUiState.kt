@@ -12,7 +12,7 @@ data class NotesUiState(
     val search: String = "",
     val listState: LazyStaggeredGridState = LazyStaggeredGridState(),
     val isGridLayout: Boolean = true,
-    val showCreateNote: Boolean = true
+    val showSearchBar: Boolean = true
 )
 
 enum class NoteType(val value: String) {

@@ -64,7 +64,7 @@ fun NoteScreen(
                 onDoneClick = { viewModel.onDoneClick() },
                 onBackButtonClick = { navigate -> viewModel.onBackButtonClick(navigate) },
                 navigateToNotes = navigateToNotes,
-                onRecover = { navigate -> viewModel.onRecoverClick(navigate) },
+                onRecover = { viewModel.onRecoverClick() },
                 onAddOrRemoveStarred = { viewModel.onAddOrRemoveStarred() },
                 onMoveToTrash = { navigate -> viewModel.moveToTrash(navigate) },
                 showSnackbar = showSnackbar
