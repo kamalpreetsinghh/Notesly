@@ -16,9 +16,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -38,6 +43,7 @@ fun NoteCards(
     notes: List<Note>,
     listState: LazyStaggeredGridState,
     isGridLayout: Boolean,
+    onScroll: (Float, Float) -> Unit,
     navigateToNoteDetail: (String, Long) -> Unit,
     onClick: (Long, (String, Long) -> Unit) -> Unit
 ) {
@@ -46,9 +52,24 @@ fun NoteCards(
         animationSpec = tween()
     )
 
+    val nestedScrollConnection = remember {
+        object : NestedScrollConnection {
+            override fun onPostScroll(
+                consumed: Offset,
+                available: Offset,
+                source: NestedScrollSource
+            ): Offset {
+                onScroll(consumed.y, available.y)
+                return Offset.Zero
+            }
+        }
+    }
+
     LazyVerticalStaggeredGrid(
         columns = StaggeredGridCells.Fixed(columns),
-        modifier = Modifier.animateContentSize(),
+        modifier = Modifier
+            .animateContentSize()
+            .nestedScroll(connection = nestedScrollConnection),
         state = listState,
         horizontalArrangement = Arrangement.spacedBy(space = AppTheme.dimens.margin),
     ) {

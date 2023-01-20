@@ -76,6 +76,11 @@ class NotesViewModel @Inject constructor(
         )
     }
 
+    fun onScroll(delta: Float, available: Float) {
+        val showCreateNote = delta > 0 || (delta == 0.0F && available > 0.0F)
+        notesUiState.value = notesUiState.value.copy(showCreateNote = showCreateNote)
+    }
+
     fun deleteNotes() {
         when (noteType) {
             NoteType.ALL.value -> moveAllToTrash()

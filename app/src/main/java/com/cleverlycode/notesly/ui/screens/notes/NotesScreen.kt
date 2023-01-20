@@ -1,6 +1,7 @@
 package com.cleverlycode.notesly.ui.screens.notes
 
 import androidx.compose.animation.*
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
@@ -84,7 +85,7 @@ fun NotesScreen(
         bottomBar = {
             val selectedChip = notesUiState.selectedChip
             AnimatedVisibility(
-                visible = selectedChip != NoteType.TRASH.value,
+                visible = notesUiState.showCreateNote && selectedChip != NoteType.TRASH.value,
                 enter = scaleIn(),
                 exit = scaleOut()
             ) {
@@ -114,7 +115,9 @@ fun NotesScreen(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { contentPadding ->
         Column(
-            modifier = Modifier.padding(contentPadding),
+            modifier = Modifier
+                .padding(contentPadding)
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val selectedChip = notesUiState.selectedChip
@@ -166,9 +169,19 @@ fun NotesScreen(
                 }
             } else {
                 AnimatedVisibility(
-                    visible = notes.isNotEmpty() || notesUiState.search.isNotEmpty(),
-                    enter = expandVertically() + fadeIn(),
-                    exit = shrinkVertically() + fadeOut()
+                    visible = notesUiState.showCreateNote && (notes.isNotEmpty() || notesUiState.search.isNotEmpty()),
+                    enter = expandVertically(
+                        animationSpec = tween(
+                            durationMillis = 250,
+                            easing = LinearEasing
+                        )
+                    ) + fadeIn(),
+                    exit = shrinkVertically(
+                        animationSpec = tween(
+                            durationMillis = 250,
+                            easing = LinearEasing
+                        )
+                    ) + fadeOut()
                 ) {
                     SearchBar(
                         search = notesUiState.search,
@@ -192,14 +205,15 @@ fun NotesScreen(
                     visible = notes.isNotEmpty(),
                     enter = slideInVertically(
                         initialOffsetY = { it / 4 },
-                        animationSpec = tween(durationMillis = 100)
-                    ) + fadeIn(),
+                        animationSpec = tween(durationMillis = 250, easing = LinearEasing)
+                    ) + fadeIn(tween(durationMillis = 250, easing = LinearEasing)),
                     exit = slideOutVertically(animationSpec = tween()) + fadeOut()
                 ) {
                     NoteCards(
                         notes = notes,
                         listState = notesUiState.listState,
                         isGridLayout = notesUiState.isGridLayout,
+                        onScroll = { delta, available -> viewModel.onScroll(delta, available) },
                         navigateToNoteDetail = navigateToNoteDetail
                     ) { noteId, navigateToNoteDetail ->
                         viewModel.onClickNote(
@@ -208,11 +222,7 @@ fun NotesScreen(
                     }
                 }
 
-                AnimatedVisibility(
-                    visible = notes.isEmpty(),
-                    enter = fadeIn(animationSpec = tween(durationMillis = 100)),
-                    exit = fadeOut(animationSpec = tween(durationMillis = 100))
-                ) {
+                if (notes.isEmpty()) {
                     Column(
                         modifier = Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.Center,
