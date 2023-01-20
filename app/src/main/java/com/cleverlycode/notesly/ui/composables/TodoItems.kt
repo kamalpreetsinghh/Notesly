@@ -1,10 +1,9 @@
 package com.cleverlycode.notesly.ui.composables
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -28,8 +27,8 @@ fun TodoItems(
     onFocused: (Int) -> Unit,
     focusRequester: FocusRequester
 ) {
-    LazyColumn {
-        itemsIndexed(tasks.value) { index, task ->
+    Column {
+        tasks.value.forEachIndexed() { index, task ->
             TodoItem(
                 task = task,
                 taskId = index,
@@ -52,7 +51,6 @@ fun TodoItem(
     focusRequester: FocusRequester
 ) {
     val alpha = if (task.isVisible) 1f else 0f
-
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier

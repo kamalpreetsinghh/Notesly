@@ -17,7 +17,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.cleverlycode.notesly.R
 import com.cleverlycode.notesly.ui.theme.AppTheme
 import com.cleverlycode.notesly.ui.theme.LightRed
-import com.cleverlycode.notesly.ui.theme.RedCard
 
 @Composable
 fun TopAppBar(

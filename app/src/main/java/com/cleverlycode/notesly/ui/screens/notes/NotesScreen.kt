@@ -235,14 +235,14 @@ fun NotesScreen(
 
         if (notesUiState.showDialog) {
             AlertDialog(
-                title = stringResource(id = R.string.delete_note_dialog_title),
-                text = stringResource(id = R.string.delete_note_dialog_text),
+                title = stringResource(id = R.string.delete_all_note_dialog_title),
+                text = stringResource(id = R.string.delete_all_note_dialog_text),
                 confirmButtonText = stringResource(id = R.string.delete_note_label),
                 dismissButtonText = stringResource(id = R.string.cancel_label),
                 onDismiss = { viewModel.closeDialog() },
                 confirmButtonClick = { viewModel.emptyTrash() },
                 showSnackbar = showSnackbar,
-                snackbarMessage = stringResource(id = R.string.all_moved_to_trash_snackbar_message)
+                snackbarMessage = stringResource(id = R.string.notes_deleted_snackbar_message)
             )
         }
     }

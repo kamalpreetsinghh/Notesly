@@ -11,6 +11,8 @@
     <string name="edit_note_screen_title">Edit Note</string>
     <string name="delete_note_dialog_title">Delete Note</string>
     <string name="delete_note_dialog_text">This note will be deleted. This action cannot be undone.</string>
+    <string name="delete_all_note_dialog_title">Delete All Notes</string>
+    <string name="delete_all_note_dialog_text">All of these notes will be permanently deleted. This action cannot be undone.</string>
     <string name="cancel_label">Cancel</string>
     <string name="delete_note_label">Delete</string>
     <string name="recover_note_label">Recover</string>
