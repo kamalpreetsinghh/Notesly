@@ -221,7 +221,6 @@ fun NotesScreen(
                         animationSpec = tween(durationMillis = 250, easing = LinearEasing)
                     ) + fadeIn(tween(durationMillis = 250, easing = LinearEasing)),
                     exit = slideOutVertically(
-                        targetOffsetY = { it / 4 },
                         animationSpec = tween(durationMillis = 250, easing = LinearEasing)
                     ) + fadeOut(tween(durationMillis = 250, easing = LinearEasing))
                 ) {
@@ -238,11 +237,20 @@ fun NotesScreen(
                     }
                 }
 
-                if (notes.isEmpty()) {
+                AnimatedVisibility(
+                    visible = notes.isEmpty(),
+                    enter = slideInVertically(
+                        initialOffsetY = { it / 4 },
+                        animationSpec = tween(durationMillis = 250, easing = LinearEasing)
+                    ) + fadeIn(tween(durationMillis = 250, easing = LinearEasing)),
+                    exit = slideOutVertically(
+                        animationSpec = tween(durationMillis = 250, easing = LinearEasing)
+                    ) + fadeOut(tween(durationMillis = 250, easing = LinearEasing))
+                ) {
                     Column(
                         modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
                     ) {
                         val emptyNoteMsg =
                             when (selectedChip) {
